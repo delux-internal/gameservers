@@ -29,7 +29,7 @@ public Plugin myinfo =
 */
 
 
-#define ctftag "{creators} C.TF |{white} "
+#define ctftag "{creators}C.TF |{white} "
 
 int uncappedpoints;
 int redpoints;
