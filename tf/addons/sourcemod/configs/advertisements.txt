@@ -19,38 +19,42 @@
 {
     "1"
     {
-        "chat"                  "{green}Think someone's breaking the rules? Use {lightgreen}/call"
+        "chat"      "{#E89A4B}C.TF | {green}Think someone's breaking the rules? Use {lightgreen}/call"
     }
     "2"
     {
-        "chat"                  "{green}Join our Discord community at {lightgreen}creators.tf/discord"
+        "chat"      "{#E89A4B}C.TF | {green}Join our Discord community at {#E89A4B}creators.tf/discord"
     }
     "3"
     {
-        "chat"                  "{green}Donate to help support the project! {lightgreen}creators.tf/donate"
+        "chat"      "{#E89A4B}C.TF | {green}Donate to help support the project! {#E89A4B}creators.tf/donate"
     }
     "4"
     {
-        "chat"                  "{green}Seeing {red}red ERRORS{green}? Type {lightgreen}/ctfhats{green} in chat to disable custom cosmetics, or download our asset pack at {lightgreen}creators.tf/assetpack{green}!"
+        "chat"      "{#E89A4B}C.TF | {green}Can't see your custom hats? Type {lightgreen}!ctfhats{green} in chat to toggle custom cosmetics on and off, and make sure to download our full asset pack at {#E89A4B}creators.tf/assetpack"
     }
     "5"
     {
-        "chat"                  "{green}Familiarise yourself with our rules: {lightgreen}creators.tf/rules"
+        "chat"      "{#E89A4B}C.TF | {green}Make sure to familiarise yourself with our rules: {#E89A4B}creators.tf/rules"
     }
     "6"
     {
-        "chat"                  "{gold}Tired of fighting? Join the {yellow}Creators.TF Silly Servers{gold}! More information on our Discord: {yellow}creators.tf/discord"
+        "chat"      "{#E89A4B}C.TF | {gold}Tired of fighting? Join the {yellow}Creators.TF Silly Servers{gold}! More information on our Discord: {#E89A4B}creators.tf/discord"
     }
     "7"
     {
-        "chat"                  "{green}Want to report a problem or leave some feedback? Contact us at {lightgreen}support@creators.tf {green}or simply leave a message on the {lightgreen}#feedback {green}channel on our Discord server."
+        "chat"      "{#E89A4B}C.TF | {green}Want to report a problem or leave some feedback? Leave a message on the {lightgreen}#feedback {green}channel on our Discord server."
     }
     "8"
     {
-        "chat"                  "{green}See any hate speech or prohibited content in chat or on decals? Screenshot it and send it directly to {lightgreen}@ModMail {green}on our Discord."
+        "chat"      "{#E89A4B}C.TF | {green}See any hate speech or prohibited content in chat or on decals? Screenshot it and send it directly to {lightgreen}@ModMail {green}on our Discord."
     }
     "9"
     {
-        "chat"                  "{green}Don't forget to {lightgreen}!nominate {green}the next map you want to play!"
+        "chat"      "{#E89A4B}C.TF | {green}Don't forget to {lightgreen}!nominate{green} the next map you want to play!"
+    }
+    "10"
+    {
+        "chat"      "{#E89A4B}C.TF | {green}Want to customize your {#E89A4B}Creators.TF{green} experience? Type {lightgreen}!settings"
     }
 }
