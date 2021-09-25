@@ -71,18 +71,18 @@ public Action ToggleCTFHat(int client, int args)
     char cookievalue[8];
     if (bShowHats[client])
     {
-        PrintToChat(client, "\x01* Toggled Creators.TF custom cosmetics \x03ON\x01!");
+        PrintToChat(client, "{creators}C.TF |{white} Toggled Creators.TF custom cosmetics {green}ON{white}!");
         cookievalue = "1";
     }
     else
     {
-        PrintToChat(client, "\x01* Toggled Creators.TF custom cosmetics \x07FF0000OFF\x01! Be warned, this may cause invisible heads or feet for some cosmetics!");
+        PrintToChat(client, "{creators}C.TF |{white} Toggled Creators.TF custom cosmetics {fullred}OFF{white}! Be warned, this may cause invisible heads or feet for some cosmetics!");
         cookievalue = "0";
     }
 
     if (!AreClientCookiesCached(client))
     {
-        PrintToChat(client, "\x01* Your settings will not be saved due to our cookie server being down.");
+        PrintToChat(client, "{creators}C.TF |{white} Your settings will not be saved due to our cookie server being down.");
         return Plugin_Handled;
     }
 
