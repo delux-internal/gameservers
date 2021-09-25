@@ -12,7 +12,7 @@ public Plugin myinfo =
     name             = "Disable Autobalance during bad times",
     author           = "stephanie",
     description      = "Don't autobalance people during these times",
-    version          = "0.0.4",
+    version          = "0.0.5",
     url              = "https://sappho.io"
 }
 
