@@ -48,7 +48,6 @@ void EnableAuto()
     if (!staydisabled)
     {
         cvAuto.SetInt(1);
-        MC_PrintToChatAll(ctftag ... "Enabled autobalance.");
     }
 }
 
@@ -56,7 +55,6 @@ void EnableAuto()
 void DisableAuto()
 {
     cvAuto.SetInt(0);
-    MC_PrintToChatAll(ctftag ... "Disabled autobalance.");
 }
 
 public void OnPluginStart()
@@ -68,6 +66,11 @@ public void OnPluginStart()
     HookEntityOutput("team_round_timer", "On1MinRemain", NearEndOfRound);
 
     cvAuto = FindConVar("mp_autoteambalance");
+
+    int cvAutoFlags = GetConVarFlags(cvAuto);
+
+    cvAutoFlags &= ~(FCVAR_NOTIFY);
+    SetConVarFlags(cvAuto, cvAutoFlags);
 }
 
 public void OnMapStart()
