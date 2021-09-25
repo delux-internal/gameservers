@@ -10,7 +10,7 @@
 
 #define CTFHatDesc "Locally toggles Creators.TF custom cosmetic visibility"
 
-#define ctftag "{creators} C.TF |{white} "
+#define ctftag "{creators}C.TF |{white} "
 
 
 bool bShowHats[MAXPLAYERS+1] = false;
@@ -74,18 +74,18 @@ public Action ToggleCTFHat(int client, int args)
     char cookievalue[8];
     if (bShowHats[client])
     {
-        PrintToChat(client, ctftag ... "Toggled Creators.TF custom cosmetics {green}ON{white}!");
+        MC_PrintToChat(client, ctftag ... "Toggled Creators.TF custom cosmetics {green}ON{white}!");
         cookievalue = "1";
     }
     else
     {
-        PrintToChat(client, ctftag ... "Toggled Creators.TF custom cosmetics {fullred}OFF{white}! Be warned, this may cause invisible heads or feet for some cosmetics!");
+        MC_PrintToChat(client, ctftag ... "Toggled Creators.TF custom cosmetics {fullred}OFF{white}! Be warned, this may cause invisible heads or feet for some cosmetics!");
         cookievalue = "0";
     }
 
     if (!AreClientCookiesCached(client))
     {
-        PrintToChat(client, ctftag ... "Your settings will not be saved due to our cookie server being down.");
+        MC_PrintToChat(client, ctftag ... "Your settings will not be saved due to our cookie server being down.");
         return Plugin_Handled;
     }
 
