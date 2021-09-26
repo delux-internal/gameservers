@@ -2,11 +2,12 @@
 #include <sourcemod>
 #include <mapchooser>
 #include <mapchooser_extended>
-#include <colors>
+#include <morecolors>
 #include <prettymap>
 #pragma semicolon 1
 
-#define MCE_VERSION "1.10.4"
+#define MCE_VERSION "1.10.5"
+#define ctftag "{creators}C.TF |{default} "
 
 public Plugin:myinfo =
 {
@@ -111,7 +112,7 @@ public Action:Command_Addmap(client, args)
 {
 	if (args < 1)
 	{
-		CReplyToCommand(client, "[NE] Usage: sm_nominate_addmap <mapname>");
+		MC_ReplyToCommand(client, ctftag ... "Usage: sm_nominate_addmap <mapname>");
 		return Plugin_Handled;
 	}
 
@@ -132,7 +133,7 @@ public Action:Command_Addmap(client, args)
 	new status;
 	if (!GetTrieValue(g_mapTrie, resolvedMap, status))
 	{
-		CReplyToCommand(client, "%t", "Map was not found", displayName);
+		MC_ReplyToCommand(client, "%t", "Map was not found", displayName);
 		return Plugin_Handled;
 	}
 
@@ -141,7 +142,7 @@ public Action:Command_Addmap(client, args)
 	if (result > Nominate_Replaced)
 	{
 		/* We assume already in vote is the casue because the maplist does a Map Validity check and we forced, so it can't be full */
-		CReplyToCommand(client, "%t", "Map Already In Vote", displayName);
+		MC_ReplyToCommand(client, "%t", "Map Already In Vote", displayName);
 
 		return Plugin_Handled;
 	}
@@ -150,7 +151,7 @@ public Action:Command_Addmap(client, args)
 	SetTrieValue(g_mapTrie, resolvedMap, MAPSTATUS_DISABLED|MAPSTATUS_EXCLUDE_NOMINATED);
 
 
-	CReplyToCommand(client, "%t", "Map Inserted", displayName);
+	MC_ReplyToCommand(client, "%t", "Map Inserted", displayName);
 	LogAction(client, -1, "\"%L\" inserted map \"%s\".", client, mapname);
 
 	return Plugin_Handled;
@@ -215,7 +216,7 @@ public Action:Command_Nominate(client, args)
 	/*
 	if (FindMap(arg1, mapname, sizeof(mapname)) == FindMap_NotFound)
 	{
-		CReplyToCommand(client, "%t", "Map was not found", mapname);
+		MC_ReplyToCommand(client, "%t", "Map was not found", mapname);
 		return Plugin_Handled;
 	}
 	*/
@@ -240,7 +241,7 @@ public Action:Command_Nominate(client, args)
 	}
 	if(!bFound)
 	{
-		CReplyToCommand(client, "[NE] %t", "Map was not found", arg1);
+		MC_ReplyToCommand(client, ctftag ... "%t", "Map was not found", arg1);
 		return Plugin_Handled;
 	}
 	//----------------------------------------------------------//
@@ -249,7 +250,7 @@ public Action:Command_Nominate(client, args)
 
 	if (!GetTrieValue(g_mapTrie, mapname, status))
 	{
-		CReplyToCommand(client, "[NE] %t", "Map was not found", displayName);
+		MC_ReplyToCommand(client, ctftag ... "%t", "Map was not found", displayName);
 		return Plugin_Handled;
 	}
 
@@ -257,17 +258,17 @@ public Action:Command_Nominate(client, args)
 	{
 		if ((status & MAPSTATUS_EXCLUDE_CURRENT) == MAPSTATUS_EXCLUDE_CURRENT)
 		{
-			CReplyToCommand(client, "[NE] %t", "Can't Nominate Current Map");
+			MC_ReplyToCommand(client, ctftag ... "%t", "Can't Nominate Current Map");
 		}
 
 		if ((status & MAPSTATUS_EXCLUDE_PREVIOUS) == MAPSTATUS_EXCLUDE_PREVIOUS)
 		{
-			CReplyToCommand(client, "[NE] %t", "Map in Exclude List");
+			MC_ReplyToCommand(client, ctftag ... "%t", "Map in Exclude List");
 		}
 
 		if ((status & MAPSTATUS_EXCLUDE_NOMINATED) == MAPSTATUS_EXCLUDE_NOMINATED)
 		{
-			CReplyToCommand(client, "[NE] %t", "Map Already Nominated");
+			MC_ReplyToCommand(client, ctftag ... "%t", "Map Already Nominated");
 		}
 
 		return Plugin_Handled;
@@ -279,11 +280,11 @@ public Action:Command_Nominate(client, args)
 	{
 		if (result == Nominate_AlreadyInVote)
 		{
-			CReplyToCommand(client, "%t", "Map Already In Vote", displayName);
+			MC_ReplyToCommand(client, "%t", "Map Already In Vote", displayName);
 		}
 		else
 		{
-			CReplyToCommand(client, "[NE] %t", "Map Already Nominated");
+			MC_ReplyToCommand(client, ctftag ... "%t", "Map Already Nominated");
 		}
 
 		return Plugin_Handled;
@@ -295,7 +296,7 @@ public Action:Command_Nominate(client, args)
 
 	char name[MAX_NAME_LENGTH];
 	GetClientName(client, name, sizeof(name));
-	PrintToChatAll("[NE] %t", "Map Nominated", name, displayName);
+	MC_PrintToChatAllEx(client, ctftag ... "%t", "Map Nominated", name, displayName);
 	LogMessage("%s nominated %s", name, mapname);
 
 	return Plugin_Continue;
@@ -401,12 +402,12 @@ public Handler_MapSelectMenu(Handle:menu, MenuAction:action, param1, param2)
 			/* Don't need to check for InvalidMap because the menu did that already */
 			if (result == Nominate_AlreadyInVote)
 			{
-				PrintToChat(param1, "[NE] %t", "Map Already Nominated");
+				MC_PrintToChat(param1, ctftag ... "%t", "Map Already Nominated");
 				return 0;
 			}
 			else if (result == Nominate_VoteFull)
 			{
-				PrintToChat(param1, "[NE] %t", "Max Nominations");
+				MC_PrintToChat(param1, ctftag ... "%t", "Max Nominations");
 				return 0;
 			}
 
@@ -414,11 +415,11 @@ public Handler_MapSelectMenu(Handle:menu, MenuAction:action, param1, param2)
 
 			if (result == Nominate_Replaced)
 			{
-				PrintToChatAll("[NE] %t", "Map Nomination Changed", name, sDisplay);
+				MC_PrintToChatAllEx(param1, ctftag ... "%t", "Map Nomination Changed", name, sDisplay);
 				return 0;
 			}
 
-			PrintToChatAll("[NE] %t", "Map Nominated", name, sDisplay);
+			MC_PrintToChatAllEx(param1, ctftag ... "%t", "Map Nominated", name, sDisplay);
 			LogMessage("%s nominated %s", name, map);
 		}
 
@@ -531,7 +532,7 @@ stock bool:IsNominateAllowed(client)
 	{
 		case CanNominate_No_VoteInProgress:
 		{
-			CReplyToCommand(client, "[ME] %t", "Nextmap Voting Started");
+			MC_ReplyToCommand(client, "[ME] %t", "Nextmap Voting Started");
 			return false;
 		}
 
@@ -541,13 +542,13 @@ stock bool:IsNominateAllowed(client)
 			GetNextMap(map, sizeof(map));
 			GetMapDisplayName(map, map, sizeof map);
 			GetPrettyMapName(map, map, sizeof map);
-			CReplyToCommand(client, "[NE] %t", "Next Map", map);
+			MC_ReplyToCommand(client, ctftag ... "%t", "Next Map", map);
 			return false;
 		}
 
 		case CanNominate_No_VoteFull:
 		{
-			CReplyToCommand(client, "[ME] %t", "Max Nominations");
+			MC_ReplyToCommand(client, "[ME] %t", "Max Nominations");
 			return false;
 		}
 	}

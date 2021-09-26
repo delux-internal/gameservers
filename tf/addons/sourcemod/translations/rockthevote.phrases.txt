@@ -24,7 +24,7 @@
 	"Already Voted"
 	{
  		"#format"		"{1:d},{2:d}"
-	 	"en"			"You have already voted to Rock the Vote. ({1} votes, {2} required)"
+	 	"en"			"{teamcolor}You {default}have already voted to Rock the Vote. [{lightgreen}{1}{default}/{lightgreen}{2} {default}votes required]"
 	}
 	
 	"Minimal Players Not Met"
@@ -36,7 +36,7 @@
 	"RTV Requested"
 	{
 		"#format"		"{1:s},{2:d},{3:d}"
-		"en"			"{1} wants to rock the vote. ({2} votes, {3} required)"
+		"en"			"{teamcolor}{1} {default}wants to Rock the Vote. [{lightgreen}{2}{default}/{lightgreen}{3} {default}votes required]"
 	}
 	
 	"RTV Vote Ready"
@@ -54,7 +54,7 @@
 	"Selected Map"
 	{
 		"#format"		"{1:s},{2:s}"
-		"en"			"{1} has selected {2}"
+		"en"			"{teamcolor}{1} {default}has selected {lightgreen}{2}"
 	}
 	
 	"No Votes"
@@ -70,6 +70,6 @@
 	"Changing Maps"
 	{
 		"#format"		"{1:s}"
-		"en"			"Changing map to {1}! Rock the Vote has spoken!"
+		"en"			"Changing map to {lightgreen}{1}{default}! Rock the Vote has spoken!"
 	}
 }
