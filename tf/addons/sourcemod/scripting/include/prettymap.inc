@@ -41,6 +41,30 @@ public void GetPrettyMapName(const char[] map, char[] prettymap, int size)
         }
     }
 
+    //capitalize gamemode prefixes
+    ReplaceString(prettymap, size, "cp_", "CP_");
+    ReplaceString(prettymap, size, "pl_", "PL_");
+    ReplaceString(prettymap, size, "plr_", "PLR_");
+    ReplaceString(prettymap, size, "ctf_", "CTF_");
+    ReplaceString(prettymap, size, "koth_", "KOTH_");
+    ReplaceString(prettymap, size, "arena_", "Arena_");
+    ReplaceString(prettymap, size, "pd_", "PD_");
+    ReplaceString(prettymap, size, "sd_", "SD_");
+    ReplaceString(prettymap, size, "tc_", "TC_");
+    ReplaceString(prettymap, size, "rd_", "RD_");
+
+    //upper case the first letter of the name
+    bool upper = false;
+    for (int i = 0; i < strlen(prettymap); i++)
+    {
+        if (upper)
+        {
+            prettymap[i] = CharToUpper(prettymap[i]);
+            upper = false;
+        }
+        else if (prettymap[i] == '_' || IsCharNumeric(prettymap[i])) upper = true;
+    }
+
     // remove underlines and replace with spaces
     ReplaceString(prettymap, size, "_", " ", true);
 
