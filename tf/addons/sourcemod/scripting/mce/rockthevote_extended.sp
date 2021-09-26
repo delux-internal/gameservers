@@ -2,12 +2,13 @@
 #include <mapchooser>
 #include <mapchooser_extended>
 #include <nextmap>
-#include <colors>
+#include <morecolors>
 #include <prettymap>
 
 #pragma semicolon 1
 
-#define MCE_VERSION "1.10.4"
+#define MCE_VERSION "1.10.5"
+#define ctftag "{creators}C.TF |{default} "
 
 public Plugin:myinfo =
 {
@@ -185,25 +186,25 @@ AttemptRTV(client)
 {
 	if (!g_RTVAllowed  || (GetConVarInt(g_Cvar_RTVPostVoteAction) == 1 && HasEndOfMapVoteFinished()))
 	{
-		CReplyToCommand(client, "[SM] %t", "RTV Not Allowed");
+		MC_ReplyToCommand(client, ctftag ... "%t", "RTV Not Allowed");
 		return;
 	}
 
 	if (!CanMapChooserStartVote())
 	{
-		CReplyToCommand(client, "[SM] %t", "RTV Started");
+		MC_ReplyToCommand(client, ctftag ... "%t", "RTV Started");
 		return;
 	}
 
 	if (GetClientCount(true) < GetConVarInt(g_Cvar_MinPlayers))
 	{
-		CReplyToCommand(client, "[SM] %t", "Minimal Players Not Met");
+		MC_ReplyToCommand(client, ctftag ... "%t", "Minimal Players Not Met");
 		return;
 	}
 
 	if (g_Voted[client])
 	{
-		CReplyToCommand(client, "[SM] %t", "Already Voted", g_Votes, g_VotesNeeded);
+		MC_ReplyToCommandEx(client, client, ctftag ... "%t", "Already Voted", g_Votes, g_VotesNeeded);
 		return;
 	}
 
@@ -213,7 +214,7 @@ AttemptRTV(client)
 	g_Votes++;
 	g_Voted[client] = true;
 
-	CPrintToChatAll("[SM] %t", "RTV Requested", name, g_Votes, g_VotesNeeded);
+	MC_PrintToChatAllEx(client, ctftag ... "%t", "RTV Requested", name, g_Votes, g_VotesNeeded);
 
 	if (g_Votes >= g_VotesNeeded)
 	{
@@ -242,7 +243,7 @@ StartRTV()
 			GetMapDisplayName(map, map, sizeof(map));
 			GetPrettyMapName(map, map, sizeof(map));
 
-			CPrintToChatAll("[SM] %t", "Changing Maps", map);
+			MC_PrintToChatAll(ctftag ... "%t", "Changing Maps", map);
 			CreateTimer(5.0, Timer_ChangeMap, _, TIMER_FLAG_NO_MAPCHANGE);
 			g_InChange = true;
 

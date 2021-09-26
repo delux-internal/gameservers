@@ -13,13 +13,13 @@
 	"Nextmap Voting Finished"
 	{
 		"#format"			"{1:s},{2:i},{3:i}"
-		"en"			"Map voting has finished. The next map will be {1}. (Received {2}%% of {3} votes)"
+		"en"			"Map voting has finished. The next map will be {green}{1}{default}. (Received {lightgreen}{2}%% {default}of {lightgreen}{3} {default}votes)"
 	}
 
 	"Current Map Extended"
 	{
 		"#format"			"{1:i},{2:i}"
-		"en"			"The current map has been extended. (Received {1}%% of {2} votes)"
+		"en"			"The current map has been {green}extended{default}. (Received {lightgreen}{1}%% {default}of {lightgreen}{2} {default}votes)"
 	}
 	
 	"Extend Map"
@@ -35,7 +35,7 @@
 	"Current Map Stays"
 	{
 		"#format"			"{1:i},{2:i}"
-		"en"			"Current map continues! The Vote has spoken! (Received {1}%% of {2} votes)"
+		"en"			"Current map continues! The Vote has spoken! (Received {lightgreen}{1}%% {default}of {lightgreen}{2} {default}votes)"
 	}
 
 	"Changed Next Map"
@@ -63,7 +63,7 @@
 	"Revote Is Needed"
 	{
 		"#format"	"{1:i}"
-		"en"		"No map has received more than {1}%% of the vote.\nSo, which map will win? A revote is needed!"
+		"en"		"No map has received more than {lightgreen}{1}%% {default}of the vote.\nSo, which map will win? A revote is needed!"
 	}
 
 	"Revote Warning"
@@ -97,7 +97,7 @@
 	"Tie Vote"
 	{
 		"#format"	"{1:i}"
-		"en"		"The top {1} maps had the same number of votes.\nA revote is needed!"
+		"en"		"The top {lightgreen}{1} {default}maps had the same number of votes.\nA revote is needed!"
 	}
 
 	"Custom Marked"

@@ -15,15 +15,16 @@
 #include <mapchooser_extended>
 #include <nextmap>
 #include <sdktools>
-#include <colors>
+#include <morecolors>
 #include <prettymap>
 
 #undef REQUIRE_PLUGIN
 #include <nativevotes>
 
-#define MCE_VERSION "1.10.4"
+#define MCE_VERSION "1.10.5"
 
 #define NV "nativevotes"
+#define ctftag "{creators}C.TF |{default} "
 
 enum RoundCounting
 {
@@ -964,7 +965,7 @@ public Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 
 public Action:Command_Mapvote(client, args)
 {
-	ShowActivity2(client, "[MCE] ", "%t", "Initiated Vote Map");
+	ShowActivity2(client, ctftag ... "", "%t", "Initiated Vote Map");
 
 	SetupWarningTimer(WarningType_Vote, MapChange_MapEnd, INVALID_HANDLE, true);
 
@@ -1006,7 +1007,7 @@ InitiateVote(MapChange:when, Handle:inputlist=INVALID_HANDLE)
 			// Can't start a vote, try again in 5 seconds.
 			//g_RetryTimer = CreateTimer(5.0, Timer_StartMapVote, _, TIMER_FLAG_NO_MAPCHANGE);
 
-			CPrintToChatAll("[MCE] %t", "Cannot Start Vote", FAILURE_TIMER_LENGTH);
+			MC_PrintToChatAll(ctftag ... "%t", "Cannot Start Vote", FAILURE_TIMER_LENGTH);
 			new Handle:data;
 			g_RetryTimer = CreateDataTimer(1.0, Timer_StartMapVote, data, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
 
@@ -1306,7 +1307,7 @@ InitiateVote(MapChange:when, Handle:inputlist=INVALID_HANDLE)
 	Call_Finish();
 
 	LogAction(-1, -1, "Voting for next map has started.");
-	CPrintToChatAll("[MCE] %t", "Nextmap Voting Started");
+	MC_PrintToChatAll(ctftag ... "%t", "Nextmap Voting Started");
 }
 
 public Handler_NativeVoteFinished(Handle:vote,
@@ -1386,7 +1387,7 @@ public Handler_VoteFinishedGeneric(Handle:menu,
 			NativeVotes_DisplayPassEx(menu, NativeVotesPass_Extend);
 		}
 
-		CPrintToChatAll("[MCE] %t", "Current Map Extended", RoundToFloor(float(item_info[0][VOTEINFO_ITEM_VOTES])/float(num_votes)*100), num_votes);
+		MC_PrintToChatAll(ctftag ... "%t", "Current Map Extended", RoundToFloor(float(item_info[0][VOTEINFO_ITEM_VOTES])/float(num_votes)*100), num_votes);
 		LogAction(-1, -1, "Voting for next map has finished. The current map has been extended.");
 
 		// We extended, so we'll have to vote again.
@@ -1402,7 +1403,7 @@ public Handler_VoteFinishedGeneric(Handle:menu,
 			NativeVotes_DisplayPassEx(menu, NativeVotesPass_Extend);
 		}
 
-		CPrintToChatAll("[MCE] %t", "Current Map Stays", RoundToFloor(float(item_info[0][VOTEINFO_ITEM_VOTES])/float(num_votes)*100), num_votes);
+		MC_PrintToChatAll(ctftag ... "%t", "Current Map Stays", RoundToFloor(float(item_info[0][VOTEINFO_ITEM_VOTES])/float(num_votes)*100), num_votes);
 		LogAction(-1, -1, "Voting for next map has finished. 'No Change' was the winner");
 
 		g_HasVoteStarted = false;
@@ -1478,7 +1479,7 @@ public Handler_VoteFinishedGeneric(Handle:menu,
 		char sDisplay[128];
 		GetPrettyMapName(displayName, sDisplay, sizeof(sDisplay));
 
-		CPrintToChatAll("[MCE] %t", "Nextmap Voting Finished", sDisplay, RoundToFloor(float(item_info[0][VOTEINFO_ITEM_VOTES])/float(num_votes)*100), num_votes);
+		MC_PrintToChatAll(ctftag ... "%t", "Nextmap Voting Finished", sDisplay, RoundToFloor(float(item_info[0][VOTEINFO_ITEM_VOTES])/float(num_votes)*100), num_votes);
 		LogAction(-1, -1, "Voting for next map has finished. Nextmap: %s.", map);
 	}
 }
@@ -1528,7 +1529,7 @@ public Handler_MapVoteFinished(Handle:menu,
 
 			g_bDidRevote = true;
 
-			CPrintToChatAll("[MCE] %t", "Tie Vote", GetArraySize(mapList));
+			MC_PrintToChatAll(ctftag ... "%t", "Tie Vote", GetArraySize(mapList));
 			SetupWarningTimer(WarningType_Revote, MapChange:g_ChangeTime, mapList);
 			return;
 		}
@@ -1567,7 +1568,7 @@ public Handler_MapVoteFinished(Handle:menu,
 
 			g_bDidRevote = true;
 
-			CPrintToChatAll("[MCE] %t", "Revote Is Needed", required_percent);
+			MC_PrintToChatAll(ctftag ... "%t", "Revote Is Needed", required_percent);
 			SetupWarningTimer(WarningType_Revote, MapChange:g_ChangeTime, mapList);
 			return;
 		}
