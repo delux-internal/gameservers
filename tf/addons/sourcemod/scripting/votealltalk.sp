@@ -7,6 +7,7 @@
 #include <morecolors>
 #include <nativevotes>
 
+#define ctftag "{creators}C.TF |{white} "
 
 public Plugin myinfo =
 {
@@ -81,7 +82,7 @@ public Action AlltalkMessage(Handle hTimer, int userid)
 
 	if (cvarAlltalk.BoolValue)
 	{
-		MC_PrintToChat(client, "[{creators}Creators.TF{default}] Alltalk is currently {green}enabled{default}. Type {lightgreen}valltalk {default}if you want to initiate a vote to disable it.");
+		MC_PrintToChat(client, ctftag ... "Alltalk is currently {green}enabled{default}. Type {lightgreen}valltalk {default}if you want to initiate a vote to disable it.");
 	}
 	return Plugin_Continue;
 }
@@ -90,11 +91,11 @@ public Action Cmd_Alltalk(int client, int args)
 {
 	if (cvarAlltalk.BoolValue)
 	{
-		MC_ReplyToCommand(client, "[{creators}Creators.TF{default}] Alltalk is currently {green}enabled{default}. Type {lightgreen}valltalk {default}if you want to initiate a vote to disable it.");
+		MC_ReplyToCommand(client, ctftag ... "Alltalk is currently {green}enabled{default}. Type {lightgreen}valltalk {default}if you want to initiate a vote to disable it.");
 	}
 	else
 	{
-		MC_ReplyToCommand(client, "[{creators}Creators.TF{default}] Alltalk is currently {red}disabled{default}. Type {lightgreen}valltalk {default}if you want to initiate a vote to enable it.");
+		MC_ReplyToCommand(client, ctftag ... "Alltalk is currently {red}disabled{default}. Type {lightgreen}valltalk {default}if you want to initiate a vote to enable it.");
 	}
 	return Plugin_Handled;
 }
@@ -121,7 +122,7 @@ void AttemptVoteAlltalk(int client)
 {
 	if (g_bVoteCooldown)
 	{
-		MC_ReplyToCommand(client, "[{creators}Creators.TF{default}] Sorry, votealltalk is currently on cool-down.");
+		MC_ReplyToCommand(client, ctftag ... "Sorry, votealltalk is currently on cool-down.");
 		return;
 	}
 
@@ -130,14 +131,14 @@ void AttemptVoteAlltalk(int client)
 
 	if (g_bVoted[client])
 	{
-		MC_ReplyToCommandEx(client, client, "[{creators}Creators.TF{default}] {teamcolor}You {default}have already voted for alltalk. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", g_iVotes, g_iVotesNeeded);
+		MC_ReplyToCommandEx(client, client, ctftag ... "{teamcolor}You {default}have already voted for alltalk. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", g_iVotes, g_iVotesNeeded);
 		return;
 	}
 
 	g_iVotes++;
 	g_bVoted[client] = true;
-	if (!cvarAlltalk.BoolValue) MC_PrintToChatAllEx(client, "[{creators}Creators.TF{default}] {teamcolor}%s {default}wants to {green}enable {default}alltalk. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", name, g_iVotes, g_iVotesNeeded);
-	else MC_PrintToChatAllEx(client, "[{creators}Creators.TF{default}] {teamcolor}%s {default}wants to {red}disable {default}alltalk. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", name, g_iVotes, g_iVotesNeeded);
+	if (!cvarAlltalk.BoolValue) MC_PrintToChatAllEx(client, ctftag ... "{teamcolor}%s {default}wants to {green}enable {default}alltalk. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", name, g_iVotes, g_iVotesNeeded);
+	else MC_PrintToChatAllEx(client, ctftag ... "{teamcolor}%s {default}wants to {red}disable {default}alltalk. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", name, g_iVotes, g_iVotesNeeded);
 
 	if (g_iVotes >= g_iVotesNeeded)
 	{

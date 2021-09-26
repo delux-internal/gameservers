@@ -9,6 +9,7 @@
 #include <nativevotes>
 #include <tf2>
 
+#define ctftag "{creators}C.TF |{white} "
 
 public Plugin myinfo =
 {
@@ -111,12 +112,12 @@ void AttemptVoteScramble(int client)
 {
 	if (g_bScrambleTeams)
 	{
-		MC_ReplyToCommand(client, "[{creators}Creators.TF{default}] A previous vote scramble has succeeded. Teams will be scrambled next round.");
+		MC_ReplyToCommand(client, ctftag ... "A previous vote scramble has succeeded. Teams will be scrambled next round.");
 		return;
 	}
 	if (g_bVoteCooldown)
 	{
-		MC_ReplyToCommand(client, "[{creators}Creators.TF{default}] Sorry, votescramble is currently on cool-down.");
+		MC_ReplyToCommand(client, ctftag ... "Sorry, votescramble is currently on cooldown.");
 		return;
 	}
 
@@ -125,13 +126,13 @@ void AttemptVoteScramble(int client)
 
 	if (g_bVoted[client])
 	{
-		MC_ReplyToCommandEx(client, client, "[{creators}Creators.TF{default}] {teamcolor}You {default}have already voted for a team scramble. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", g_iVotes, g_iVotesNeeded);
+		MC_ReplyToCommandEx(client, client, ctftag ... "{teamcolor}You {default}have already voted for a team scramble. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", g_iVotes, g_iVotesNeeded);
 		return;
 	}
 
 	g_iVotes++;
 	g_bVoted[client] = true;
-	MC_PrintToChatAllEx(client, "[{creators}Creators.TF{default}] {teamcolor}%s {default}wants to scramble teams. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", name, g_iVotes, g_iVotesNeeded);
+	MC_PrintToChatAllEx(client, ctftag ... "{teamcolor}%s {default}wants to scramble teams. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", name, g_iVotes, g_iVotesNeeded);
 
 	if (g_iVotes >= g_iVotesNeeded)
 	{
@@ -163,14 +164,20 @@ void VoteScrambleMenu()
 	if (NativeVotes_IsVoteInProgress())
 	{
 		CreateTimer(10.0, Timer_Retry, _, TIMER_FLAG_NO_MAPCHANGE);
-		PrintToConsoleAll("[SM] Can't vote scramble because there is already a vote in progress. Retrying in 10 seconds...");
+		PrintToConsoleAll("C.TF | Can't vote scramble because there is already a vote in progress. Retrying in 10 seconds...");
 		return;
 	}
 
 	Handle vote = NativeVotes_Create(NativeVote_Handler, NativeVotesType_Custom_Mult);
 
-	if (GameRules_GetProp("m_bInSetup") || g_bCanScramble) NativeVotes_SetTitle(vote, "Scramble teams?");
-	else NativeVotes_SetTitle(vote, "Scramble teams next round?");
+	if (GameRules_GetProp("m_bInSetup") || g_bCanScramble)
+        {
+            NativeVotes_SetTitle(vote, "Scramble teams?");
+        }
+        else
+        {
+            NativeVotes_SetTitle(vote, "Scramble teams next round?");
+        }
 
 	NativeVotes_AddItem(vote, "yes", "Yes");
 	NativeVotes_AddItem(vote, "no", "No");
@@ -277,7 +284,7 @@ public Action Timer_Scramble(Handle timer)
 		mins = mins+1;
 	}
 	CreateTimer(10.0, Timer_DelayRTS, mins);
-	MC_PrintToChatAll("[{creators}Creators.TF{default}] Scrambling the teams due to vote.");
+	MC_PrintToChatAll(ctftag ... "Scrambling the teams due to vote.");
 }
 
 public Action Timer_DelayRTS(Handle timer, any mins)
