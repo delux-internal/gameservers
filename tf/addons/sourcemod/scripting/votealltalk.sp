@@ -7,7 +7,7 @@
 #include <morecolors>
 #include <nativevotes>
 
-#define ctftag "{creators}C.TF |{white} "
+#define ctftag "{creators}>>{default} "
 
 public Plugin myinfo =
 {

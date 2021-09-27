@@ -11,6 +11,8 @@ bool m_bWaitForNoInput[MAXPLAYERS + 1];
 
 #define DISABLEDHTTP_MESSAGE "\x01* To use this command, you'll need to set \x03cl_disablehtmlmotd 0 \x01in your console."
 
+#define ctftag "{creators}>>{default} "
+
 public Plugin myinfo =
 {
 	name = "[TF2] MotD Module",
@@ -152,7 +154,7 @@ public Action cOpenWiki(int client, int args)
 {
 	if (!TF2MvM_IsPlayingMvM())
 	{
-		MC_ReplyToCommand(client, "[{creators}Creators.TF{default}] This command currently only works while playing Mann Vs. Machine.");
+		MC_ReplyToCommand(client, ctftag ... "This command currently only works while playing Mann Vs. Machine.");
 		return Plugin_Handled;
 	}
 	
