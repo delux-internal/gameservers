@@ -7,7 +7,7 @@
 #pragma semicolon 1
 
 #define MCE_VERSION "1.10.5"
-#define ctftag "{creators}C.TF |{default} "
+#define ctftag "{creators}>>{default} "
 
 public Plugin:myinfo =
 {

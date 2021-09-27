@@ -10,6 +10,8 @@
 
 #pragma newdecls required
 
+#define ctftag "{creators}>>{default} "
+
 public Plugin myinfo = 
 {
 	name = "Prevent NSFW Sprays",
@@ -81,11 +83,11 @@ public int PanelHandler(Menu menu, MenuAction action, int client, int param2)
 			{
 				g_bUnderstood[client] = true;
 				SetClientCookie(client, cookie, "true");
-				MC_PrintToChat(client, "[{creators}Creators.TF{default}] Thank you for agreeing to our decal rule. You may now spray decals.");
+				MC_PrintToChat(client, ctftag ... "Thank you for agreeing to our decal rule. You may now spray decals.");
 			}
 			case 2:
 			{
-				MC_PrintToChat(client, "[{creators}Creators.TF{default}] You may not spray decals till you select 'I agree'. If you truly do not understand the decal rule, send a message in #help-desk on our discord: https://creators.tf/discord");
+				MC_PrintToChat(client, ctftag ... "You may not spray decals till you select 'I agree'. If you truly do not understand the decal rule, send a message in #help-desk on our discord: https://creators.tf/discord");
 			}
 		}
 	}

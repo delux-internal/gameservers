@@ -24,7 +24,7 @@
 #define MCE_VERSION "1.10.5"
 
 #define NV "nativevotes"
-#define ctftag "{creators}C.TF |{default} "
+#define ctftag "{creators}>>{default} "
 
 enum RoundCounting
 {

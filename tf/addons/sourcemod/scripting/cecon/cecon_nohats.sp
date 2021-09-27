@@ -10,7 +10,7 @@
 
 #define CTFHatDesc "Locally toggles Creators.TF custom cosmetic visibility"
 
-#define ctftag "{creators}C.TF |{white} "
+#define ctftag "{creators}>>{default} "
 
 
 bool bShowHats[MAXPLAYERS+1] = false;
