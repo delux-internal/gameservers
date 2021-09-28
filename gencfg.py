@@ -127,7 +127,7 @@ else:
 if "EU" in c_region:
     region = "West EU"
 
-elif c_region == "VIN":
+elif c_region == "CHI":
     region = "Central NA"
 
 elif c_region == "LA":
