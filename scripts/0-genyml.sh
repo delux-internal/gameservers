@@ -17,6 +17,7 @@ jobs=(
 # all servers tags
 allservers=(
     vinpub
+    chipub
     lapub
     eupub
     auspub
