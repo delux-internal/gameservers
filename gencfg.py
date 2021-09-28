@@ -90,13 +90,14 @@ econ = False
 pubs = False
 
 if sid > 100 and sid <= 199:
+
     c_region = "EU 1"
     type = "Quickplay"
 
 
 elif sid > 200 and sid <= 299:
 
-    c_region = "VIN"
+    c_region = "CHI"
     type = "Quickplay"
 
 
@@ -113,7 +114,6 @@ elif sid > 600 and sid <= 699:
 
 
 elif sid > 700 and sid <= 799:
-
     c_region = "SGP"
 
     type = "Quickplay"
@@ -128,10 +128,10 @@ if "EU" in c_region:
     region = "West EU"
 
 elif c_region == "VIN":
-    region = "East US"
+    region = "Central NA"
 
 elif c_region == "LA":
-    region = "West US"
+    region = "West NA"
 
 elif c_region == "SGP":
     region = "Singapore"
