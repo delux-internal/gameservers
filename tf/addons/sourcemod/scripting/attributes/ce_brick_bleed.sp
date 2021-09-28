@@ -58,14 +58,15 @@ public void OnEntityCreated(int entity, const char[] classname)
 	{
 		if (IsValidEntity(entity) && entity > 0 && entity <= MAXENTITIES)
 		{
-			RequestFrame(HookJarRF, EntIndexToEntRef(entity));
+			SDKHook(entity, SDKHook_SpawnPost, HookJarSpawnPost);
+			// RequestFrame(HookJarRF, EntIndexToEntRef(entity));
 		}
 	}
 }
 
-void HookJarRF(int entref)
+void HookJarSpawnPost(int entity)
 {
-	int entity = EntRefToEntIndex(entref);
+	// int entity = EntRefToEntIndex(entref);
 
 	if (!IsValidEntity(entity) || !entity)
 	{
