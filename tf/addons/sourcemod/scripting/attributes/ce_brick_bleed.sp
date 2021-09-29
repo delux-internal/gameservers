@@ -279,45 +279,6 @@ public Action OnTakeDamage
     return Plugin_Changed;
 }
 
-public void OnGameFrame()
-{
-    int ent;
-    while ((ent = FindEntityByClassname(ent, "tf_projectile_throwable_brick")) != INVALID_ENT_REFERENCE)
-    {
-        if (IsValidEntity(ent))
-        {
-            float position[3];
-            float mins[3];
-            float maxs[3];
-            GetEntPropVector(ent, Prop_Send, "m_vecMins", mins);
-            GetEntPropVector(ent, Prop_Send, "m_vecMaxs", maxs);
-
-            GetEntPropVector(ent, Prop_Send, "m_vecOrigin", position);
-
-            AddVectors (position, mins, mins);
-            AddVectors (position, maxs, maxs);
-            LogMessage("drawing on brick %i", ent);
-
-            TE_SendBeamBoxToAll
-            (
-                mins,                                       // upper corner
-                maxs,                                       // lower corner
-                PrecacheModel("sprites/laser.vmt", true),   // model index
-                PrecacheModel("sprites/laser.vmt", true),   // halo index
-                0,                                          // startfame
-                1,                                          // framerate
-                1.0,                                        // lifetime
-                1.0,                                        // Width
-                1.0,                                        // endwidth
-                2,                                          // fadelength
-                1.0,                                        // amplitude
-                {255, 255, 255, 255},                       // color
-                0                                           // speed
-                );
-        }
-    }
-}
-
 bool IsValidClient(int iClient)
 {
     if (iClient <= 0 || iClient > MaxClients || !IsClientInGame(iClient))
@@ -335,56 +296,4 @@ bool IsValidClient(int iClient)
 public float ClampFloat(float val, float min, float max)
 {
     return val > max ? max : val < min ? min : val;
-}
-stock void TE_SendBeamBoxToAll(float uppercorner[3], const float bottomcorner[3], int ModelIndex, int HaloIndex, int StartFrame, int FrameRate, float Life, float Width, float EndWidth, int FadeLength, float Amplitude, const int Color[4], int Speed) {
-    // Create the additional corners of the box
-    float tc1[3];
-    AddVectors(tc1, uppercorner, tc1);
-    tc1[0] = bottomcorner[0];
-
-    float tc2[3];
-    AddVectors(tc2, uppercorner, tc2);
-    tc2[1] = bottomcorner[1];
-
-    float tc3[3];
-    AddVectors(tc3, uppercorner, tc3);
-    tc3[2] = bottomcorner[2];
-
-    float tc4[3];
-    AddVectors(tc4, bottomcorner, tc4);
-    tc4[0] = uppercorner[0];
-
-    float tc5[3];
-    AddVectors(tc5, bottomcorner, tc5);
-    tc5[1] = uppercorner[1];
-
-    float tc6[3];
-    AddVectors(tc6, bottomcorner, tc6);
-    tc6[2] = uppercorner[2];
-
-    // Draw all the edges
-    TE_SetupBeamPoints(uppercorner, tc1, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(uppercorner, tc2, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(uppercorner, tc3, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(tc6, tc1, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(tc6, tc2, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(tc6, bottomcorner, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(tc4, bottomcorner, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(tc5, bottomcorner, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(tc5, tc1, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(tc5, tc3, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(tc4, tc3, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
-    TE_SetupBeamPoints(tc4, tc2, ModelIndex, HaloIndex, StartFrame, FrameRate, Life, Width, EndWidth, FadeLength, Amplitude, Color, Speed);
-    TE_SendToAll();
 }
