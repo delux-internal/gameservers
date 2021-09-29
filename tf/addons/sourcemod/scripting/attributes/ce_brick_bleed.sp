@@ -297,3 +297,4 @@ public float ClampFloat(float val, float min, float max)
 {
     return val > max ? max : val < min ? min : val;
 }
+
