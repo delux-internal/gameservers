@@ -12,7 +12,7 @@ public Plugin myinfo =
     name             = "Disable Autobalance during bad times",
     author           = "stephanie",
     description      = "Don't autobalance people during these times",
-    version          = "0.0.3",
+    version          = "0.0.5",
     url              = "https://sappho.io"
 }
 
@@ -27,6 +27,9 @@ public Plugin myinfo =
 
     TODO - if one team has 2 intel captures and the 3rd intel is picked up
 */
+
+
+#define ctftag "{creators}>>{default} "
 
 int uncappedpoints;
 int redpoints;
@@ -45,7 +48,6 @@ void EnableAuto()
     if (!staydisabled)
     {
         cvAuto.SetInt(1);
-        //MC_PrintToChatAll("[{creators}Creators.TF{default}] Enabled autobalance.");
     }
 }
 
@@ -53,7 +55,6 @@ void EnableAuto()
 void DisableAuto()
 {
     cvAuto.SetInt(0);
-    //MC_PrintToChatAll("[{creators}Creators.TF{default}] Disabled autobalance due to round almost being over.");
 }
 
 public void OnPluginStart()
@@ -63,8 +64,13 @@ public void OnPluginStart()
     HookEvent("teamplay_point_captured", ControlPointCapped);
     HookEntityOutput("team_round_timer", "On30SecRemain", NearEndOfRound);
     HookEntityOutput("team_round_timer", "On1MinRemain", NearEndOfRound);
-    
+
     cvAuto = FindConVar("mp_autoteambalance");
+
+    int cvAutoFlags = GetConVarFlags(cvAuto);
+
+    cvAutoFlags &= ~(FCVAR_NOTIFY);
+    SetConVarFlags(cvAuto, cvAutoFlags);
 }
 
 public void OnMapStart()
@@ -224,7 +230,8 @@ public Action CheckMapTimeLeft(Handle timer)
     // 1 minute left!
     if (totalsecs == 60)
     {
-        LogMessage("server time at 1 minute left, disabling autobalance");
+        LogMessage("Server time at 1 minute left, disabling autobalance");
+        MC_PrintToChatAll(ctftag ... "1 minute remaining on the server time limit.");
         DisableAuto();
         staydisabled = true;
     }

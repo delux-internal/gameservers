@@ -9,6 +9,7 @@
 #include <nativevotes>
 #include <tf2>
 
+#define ctftag "{creators}>>{default} "
 
 public Plugin myinfo =
 {
@@ -19,7 +20,7 @@ public Plugin myinfo =
 	url = "http://steamcommunity.com/id/xnanochip"
 };
 
-ConVar cvarVoteTime, cvarVoteTimeDelay, cvarVoteChatPercent, cvarVoteMenuPercent, cvarBonusRoundTime, cvarTimeLimit, cvarMinimumVotesNeeded, cvarCanScrambleTime;
+ConVar cvarVoteTime, cvarVoteTimeDelay, cvarVoteChatPercent, cvarVoteMenuPercent, cvarBonusRoundTime, cvarTimeLimit, cvarMinimumVotesNeeded, cvarScrambleAutoBalance, cvarAutoBalance; //cvarCanScrambleTime;
 
 int g_iVoters, g_iVotes, g_iVotesNeeded;
 bool g_bCanScramble;
@@ -35,14 +36,15 @@ public void OnPluginStart()
 	cvarVoteChatPercent = CreateConVar("nano_votescramble_chat_percentage", "0.20", "How many players are required for the chat vote to pass? 0.20 = 20%.", 0, true, 0.05, true, 1.0);
 	cvarVoteMenuPercent = CreateConVar("nano_votescramble_menu_percentage", "0.60", "How many players are required for the menu vote to pass? 0.60 = 60%.", 0, true, 0.05, true, 1.0);
 	cvarMinimumVotesNeeded = CreateConVar("nano_votescramble_minimum", "3", "What are the minimum number of votes needed to initiate a chat vote?", 0);
-	cvarCanScrambleTime = CreateConVar("nano_votescramble_canscrambletime", "60.0", "The number of seconds after a round has officially started that a vote scramble can happen immediately (rather than waiting for next round).");
+	
+	//cvarCanScrambleTime = CreateConVar("nano_votescramble_canscrambletime", "60.0", "The number of seconds after a round has officially started that a vote scramble can happen immediately (rather than waiting for next round).");
+	// since c.tf has the plugin that turns off autobalance when the round is coming to an end, we'll check the autobalance cvar and if it's enabled, we'll allow scrambles to happen immediately, else it'll wait till next round.
+	cvarScrambleAutoBalance = CreateConVar("nano_votescramble_autobalance", "1", "If set to 1, scramble the teams immediately if autobalance is enabled when a successful vscramble vote passes, else wait till the next round to perform a scramble.");
 
 	cvarTimeLimit = FindConVar("mp_timelimit");
 	cvarBonusRoundTime = FindConVar("mp_bonusroundtime");
+	cvarAutoBalance = FindConVar("mp_autoteambalance");
 
-	HookEvent("teamplay_round_start", Event_RoundStart);
-	HookEvent("arena_round_start", Event_RoundStart);
-	HookEvent("teamplay_setup_finished", Event_RoundStart);
 	HookEvent("teamplay_round_win", Event_RoundEnd);
 	HookEvent("teamplay_round_stalemate", Event_RoundEnd);
 	HookEvent("teamplay_win_panel", Event_RoundEnd);
@@ -111,12 +113,12 @@ void AttemptVoteScramble(int client)
 {
 	if (g_bScrambleTeams)
 	{
-		MC_ReplyToCommand(client, "[{creators}Creators.TF{default}] A previous vote scramble has succeeded. Teams will be scrambled next round.");
+		MC_ReplyToCommand(client, ctftag ... "A previous vote scramble has succeeded. Teams will be scrambled next round.");
 		return;
 	}
 	if (g_bVoteCooldown)
 	{
-		MC_ReplyToCommand(client, "[{creators}Creators.TF{default}] Sorry, votescramble is currently on cool-down.");
+		MC_ReplyToCommand(client, ctftag ... "Sorry, votescramble is currently on cooldown.");
 		return;
 	}
 
@@ -125,13 +127,13 @@ void AttemptVoteScramble(int client)
 
 	if (g_bVoted[client])
 	{
-		MC_ReplyToCommandEx(client, client, "[{creators}Creators.TF{default}] {teamcolor}You {default}have already voted for a team scramble. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", g_iVotes, g_iVotesNeeded);
+		MC_ReplyToCommandEx(client, client, ctftag ... "{teamcolor}You {default}have already voted for a team scramble. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", g_iVotes, g_iVotesNeeded);
 		return;
 	}
 
 	g_iVotes++;
 	g_bVoted[client] = true;
-	MC_PrintToChatAllEx(client, "[{creators}Creators.TF{default}] {teamcolor}%s {default}wants to scramble teams. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", name, g_iVotes, g_iVotesNeeded);
+	MC_PrintToChatAllEx(client, ctftag ... "{teamcolor}%s {default}wants to scramble teams. [{lightgreen}%d{default}/{lightgreen}%d {default}votes required]", name, g_iVotes, g_iVotesNeeded);
 
 	if (g_iVotes >= g_iVotesNeeded)
 	{
@@ -163,14 +165,20 @@ void VoteScrambleMenu()
 	if (NativeVotes_IsVoteInProgress())
 	{
 		CreateTimer(10.0, Timer_Retry, _, TIMER_FLAG_NO_MAPCHANGE);
-		PrintToConsoleAll("[SM] Can't vote scramble because there is already a vote in progress. Retrying in 10 seconds...");
+		PrintToConsoleAll("C.TF | Can't vote scramble because there is already a vote in progress. Retrying in 10 seconds...");
 		return;
 	}
 
 	Handle vote = NativeVotes_Create(NativeVote_Handler, NativeVotesType_Custom_Mult);
 
-	if (GameRules_GetProp("m_bInSetup") || g_bCanScramble) NativeVotes_SetTitle(vote, "Scramble teams?");
-	else NativeVotes_SetTitle(vote, "Scramble teams next round?");
+	if (GameRules_GetProp("m_bInSetup") || g_bCanScramble)
+        {
+            NativeVotes_SetTitle(vote, "Scramble teams?");
+        }
+        else
+        {
+            NativeVotes_SetTitle(vote, "Scramble teams next round?");
+        }
 
 	NativeVotes_AddItem(vote, "yes", "Yes");
 	NativeVotes_AddItem(vote, "no", "No");
@@ -207,7 +215,7 @@ public int NativeVote_Handler(Handle vote, MenuAction action, int param1, int pa
 
 			if (FloatCompare(percent, limit) >= 0 && StrEqual(item, "yes"))
 			{
-				if (GameRules_GetProp("m_bInSetup") || g_bCanScramble)
+				if (CanScrambleTeamsNow())
 				{
 					NativeVotes_DisplayPass(vote, "Scrambling teams...");
 					CreateTimer(0.1, Timer_Scramble);
@@ -223,12 +231,23 @@ public int NativeVote_Handler(Handle vote, MenuAction action, int param1, int pa
 	}
 }
 
-public void Event_RoundStart(Handle event, const char[] name, bool dontBroadcast)
+public bool CanScrambleTeamsNow()
 {
-	if (!g_bWaitingFP && !GameRules_GetProp("m_bInSetup"))
+	if (g_bWaitingFP)
 	{
-		g_bCanScramble = true;
-		CreateTimer(cvarCanScrambleTime.FloatValue, Timer_CanScrambleDelay, _, TIMER_FLAG_NO_MAPCHANGE);
+		return false;
+	}
+	else if (GameRules_GetProp("m_bInSetup"))
+	{
+		return true;
+	}
+	else if (cvarScrambleAutoBalance.IntValue == 1 && cvarAutoBalance.IntValue == 1)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -239,11 +258,6 @@ public void OnTeamplayAlert(Event event, const char[] name, bool dontBroadcast)
 	{
 		g_iVotes = 0;
 	}
-}
-
-public Action Timer_CanScrambleDelay(Handle hTimer)
-{
-	g_bCanScramble = false;
 }
 
 public void Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
@@ -277,7 +291,7 @@ public Action Timer_Scramble(Handle timer)
 		mins = mins+1;
 	}
 	CreateTimer(10.0, Timer_DelayRTS, mins);
-	MC_PrintToChatAll("[{creators}Creators.TF{default}] Scrambling the teams due to vote.");
+	MC_PrintToChatAll(ctftag ... "Scrambling the teams due to vote.");
 }
 
 public Action Timer_DelayRTS(Handle timer, any mins)

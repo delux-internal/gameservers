@@ -16,7 +16,6 @@ jobs=(
 
 # all servers tags
 allservers=(
-    vinpub
     chipub
     lapub
     eupub
@@ -26,7 +25,7 @@ allservers=(
 
 # staging servers tags
 stagingservers=(
-    vinpub
+    chipub
 )
 
 # use staging by default

@@ -13,13 +13,13 @@
 	"Map Already In Vote"
 	{
 		"#format"		"{1:s}"
-		"en"			"Map '{1}' already in the nominations list."
+		"en"			"Map {lightgreen}{1} {default}already in the nominations list."
 	}
 
 	"Map Inserted"
 	{
 		"#format"		"{1:s}"
-		"en"			"Map '{1}' added to the nominations list."
+		"en"			"Map {lightgreen}{1} {default}added to the nominations list."
 	}
 	
 	"Map Already Nominated"
@@ -30,13 +30,13 @@
 	"Map Nominated"
 	{
 		"#format"		"{1:s},{2:s}"
-		"en"			"{1} has nominated {2}."
+		"en"			"{teamcolor}{1} {default}has nominated {lightgreen}{2}{default}."
 	}
 
 	"Map Nomination Changed"
 	{
 		"#format"		"{1:s},{2:s}"
-		"en"			"{1} has changed their nomination to {2}."
+		"en"			"{teamcolor}{1} {default}has changed their nomination to {lightgreen}{2}{default}."
 	}
 	
 	"Nominate Title"

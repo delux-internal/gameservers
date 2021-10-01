@@ -24,6 +24,8 @@
 
 #define FLAG_RESET_RATINGS  ADMFLAG_VOTE
 
+#define ctftag "{creators}>>{default} "
+
 new String:g_current_map[64];
 new Handle:db = INVALID_HANDLE;
 new Handle:g_cvars[CVAR_NUM_CVARS];
@@ -367,7 +369,7 @@ public Action OnPlayerRunCmd(int client, int &buttons)
 		{
 			g_bToCloseMenu[client] = false;
 			CancelClientMenu(client, true);
-			MC_PrintToChat(client, "[{creators}Creators.TF{default}] Auto-closed the map rating menu. Type {lightgreen}!maprate {default}to reopen it.");
+			MC_PrintToChat(client, ctftag ... "Auto-closed the map rating menu. Type {lightgreen}!maprate {default}to reopen it.");
 		}
 	}
 }
