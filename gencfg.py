@@ -169,7 +169,7 @@ if type == "Halloween":
     ctype = "Halloween Only"
     pubs = True
     econ = True
-    mapcyclefile = "quickplay/mapcycle_hw.txt"
+    mapcyclefile = "quickplay/mapcycle_halloween.txt"
 else:
     ctype = type
     pubs = True
