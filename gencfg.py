@@ -89,16 +89,26 @@ cregion = ""
 econ = False
 pubs = False
 
+
+
 if sid > 100 and sid <= 199:
 
     c_region = "EU 1"
     type = "Quickplay"
 
+    if sid > 102:
+        type = "Halloween"
+
+
 
 elif sid > 200 and sid <= 299:
 
     c_region = "CHI"
+
     type = "Quickplay"
+
+    if sid > 202:
+        type = "Halloween"
 
 
 elif sid > 300 and sid <= 399:
@@ -106,17 +116,26 @@ elif sid > 300 and sid <= 399:
     c_region = "LA"
     type = "Quickplay"
 
+    if sid > 302:
+        type = "Halloween"
+
 
 elif sid > 600 and sid <= 699:
 
     c_region = "AUS"
     type = "Quickplay"
 
+    if sid > 602:
+        type = "Halloween"
+
 
 elif sid > 700 and sid <= 799:
     c_region = "SGP"
 
     type = "Quickplay"
+
+    if sid > 702:
+        type = "Halloween"
 
 else:
     c_region = "Unknown"
@@ -141,18 +160,21 @@ elif c_region == "AUS":
 
 # type of server
 
+mapcyclefile = ""
+
 pubs = False
 econ = False
 
-#if type == "Vanilla+":
-#    ctype = "Vanilla+ | NoDL"
-#    pubs = True
-#    econ = False
-
-#else:
-ctype = type
-pubs = True
-econ = True
+if type == "Halloween":
+    ctype = "Halloween Only"
+    pubs = True
+    econ = True
+    mapcyclefile = "quickplay/mapcycle_hw.txt"
+else:
+    ctype = type
+    pubs = True
+    econ = True
+    mapcyclefile = "quickplay/mapcycle.txt"
 
 # always exec our base cfg
 config_file_string += ("exec quickplay/base\n")
@@ -164,12 +186,8 @@ config_file_string += ("sb_id {}\n".format(sid))
 config_file_string += ("ce_type {}\n".format(ctype))
 config_file_string += ("ce_region {}\n".format(c_region))
 
-mapcyclefile = ""
 
-# mapcyclefile gets tacked onto the launch options so we don't waste time on itemtest
-mapcyclefile = "quickplay/mapcycle.txt"
 config_file_string += ("exec quickplay/pubs\n")
-
 config_file_string += ("mapcyclefile {}\n".format(mapcyclefile))
 
 if econ:
