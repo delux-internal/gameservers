@@ -125,7 +125,7 @@ elif sid > 600 and sid <= 699:
     c_region = "AUS"
     type = "Quickplay"
 
-    if sid > 602:
+    if sid > 601:
         type = "Halloween"
 
 
@@ -134,7 +134,7 @@ elif sid > 700 and sid <= 799:
 
     type = "Quickplay"
 
-    if sid > 702:
+    if sid > 701:
         type = "Halloween"
 
 else:
