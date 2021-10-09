@@ -20,9 +20,9 @@ public void OnClientPutInServer(int Cl)
         {
             StacLog("%N joined. Checking cvars", Cl);
         }
-        QueryTimer[Cl] = CreateTimer(5.0, Timer_CheckClientConVars, userid);
+        QueryTimer[Cl] = CreateTimer(15.0, Timer_CheckClientConVars, userid);
 
-        CreateTimer(2.5, CheckAuthOn, userid);
+        CreateTimer(10.0, CheckAuthOn, userid);
     }
     OnClientPutInServer_jaypatch(Cl);
 }
@@ -33,30 +33,33 @@ Action CheckAuthOn(Handle timer, int userid)
 
     if (IsValidClient(Cl))
     {
-        // don't bother checking if already authed and DEFINITELY don't check if steam is down or there's no way to do so thru an ext
+        // don't bother checking if already authed
         if (!IsClientAuthorized(Cl))
         {
-            if (shouldCheckAuth())
+            SteamAuthFor[Cl][0] = '\0';
+            if (kickUnauth)
             {
-                SteamAuthFor[Cl][0] = '\0';
-                if (kickUnauth)
-                {
-                    StacGeneralPlayerNotify(userid, "Kicked for being unauthorized w/ Steam");
-                    StacLog("Kicking %N for not being authorized with Steam.", Cl);
-                    KickClient(Cl, "[StAC] Not authorized with Steam Network, please authorize and reconnect");
-                }
-                else
-                {
-                    StacGeneralPlayerNotify(userid, "Client failed to authorize w/ Steam in a timely manner");
-                    StacLog("Client %N failed to authorize w/ Steam in a timely manner.", Cl);
-                }
+                StacGeneralPlayerNotify(userid, "Reconnecting player for being unauthorized w/ Steam");
+                StacLog("Reconnecting %N for not being authorized with Steam.", Cl);
+                PrintToChat(Cl, "You are being reconnected to the server in an attempt to reauthorize you with the Steam network.");
+                ClientCommand(Cl, "retry");
+                // Force clients who ignore the retry to do it anyway.
+                CreateTimer(1.0, Reconn, userid);
+                // TODO: detect clients that ignore this
+                // KickClient(Cl, "[StAC] Not authorized with Steam Network, please authorize and reconnect");
+            }
+            else
+            {
+                StacGeneralPlayerNotify(userid, "Client failed to authorize w/ Steam in a timely manner");
+                StacLog("Client %N failed to authorize w/ Steam in a timely manner.", Cl);
+                // SteamAuthFor[Cl][0] = '\0'; ?
             }
         }
         else
         {
             char steamid[64];
 
-            // let's try to get their auth anyway
+            // let's try to get their auth
             if (GetClientAuthId(Cl, AuthId_Steam2, steamid, sizeof(steamid)))
             {
                 // if we get it, copy to our global list
@@ -70,19 +73,28 @@ Action CheckAuthOn(Handle timer, int userid)
     }
 }
 
+Action Reconn(Handle timer, int userid)
+{
+    int Cl = GetClientOfUserId(userid);
+    if (IsValidClient(Cl))
+    {
+        StacGeneralPlayerNotify(userid, "Client failed to authorize w/ Steam AND ignored a retry command?? Suspicious! Forcing a reconnection.");
+        // If we got this far they're probably cheating, but I need to verify that. Force them in the meantime.
+        ReconnectClient(Cl);
+    }
+}
+
 // cache this! we don't need to clear this because it gets overwritten when a new client connects with the same index
 public void OnClientAuthorized(int Cl, const char[] auth)
 {
     if (!IsFakeClient(Cl))
     {
         strcopy(SteamAuthFor[Cl], sizeof(SteamAuthFor[]), auth);
-        if (DEBUG)
-        {
-            StacLog("auth %s for Cl %N", auth, Cl);
-        }
+        StacLog("Client %N authorized with auth %s.", Cl, auth);
     }
 }
 
+// player left and mapchanges
 public void OnClientDisconnect(int Cl)
 {
     int userid = GetClientUserId(Cl);
@@ -201,11 +213,44 @@ public Action ePlayerChangedName(Handle event, char[] name, bool dontBroadcast)
 
 public Action ePlayerAchievement(Handle event, char[] name, bool dontBroadcast)
 {
+    // ent index of achievement earner
     int Cl              = GetEventInt(event, "player");
-    int achieve_id      = GetEventInt(event, "achievementID");
 
-    cheevCheck(Cl, achieve_id);
+    // id of our achievement
+    int achieve_id      = GetEventInt(event, "achievement");
 
+    StacLog("Player %L earned achievement ID %i", Cl, achieve_id);
+
+    // we can't sdkcall CAchievementMgr::GetAchievementByIndex(int) here because the server will never have a valid CAchievementMgr*
+    // this is because achievements are all client side (because Valve just trusts clients fsr?)
+    // we have to (use other peoples') hardcode, in this case nosoop's achievements.inc.
+
+    // achievment number is bogus:
+    if
+    (
+        // it's too low
+        achieve_id < view_as<int>(Achievement_GetTurretKills)
+        ||
+        // it's too high
+        achieve_id > view_as<int>(Achievement_MapsPowerhouseKillEnemyInWater)
+    )
+    {
+        // uid for passing to GenPlayerNotify
+        int userid = GetClientUserId(Cl);
+
+        // tell an admin, don't ban yet
+        char message[256];
+        Format(message, sizeof(message), "Client is (prolly) cheating with bogus AchievementID %i", achieve_id);
+        StacGeneralPlayerNotify(userid, message);
+
+        PrintToImportant("[debug] User %N earned BOGUS achievement ID %i", Cl, achieve_id);
+        // Handle it for now, should we though? cheats could just send bogus acheivement ids and detect stac
+        // but shouldn't we ban instantly for bogus achievement ids?
+        // Hrmm.
+        return Plugin_Handled;
+    }
+
+    PrintToImportant("[debug] User %N earned achievement ID %i", Cl, achieve_id);
     return Plugin_Continue;
 }
 
