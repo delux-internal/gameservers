@@ -1,18 +1,18 @@
 stages:
+  - merge_nightly
   - compile_plugins
   - genyml
   - trigger
   - fastdl
   - github
 
-# Secret Detection
-#include:
-#  - template: Secret-Detection.gitlab-ci.yml
 
-#secret_detection:
-#  tags:
-#    - sast-runner
-
+merge_nightly:
+  stage: merge_nightly
+  script: git branch -D nightly && git checkout unstable && git checkout -B nightly && git push origin nightly --force
+  only:
+  - nightly
+  needs: []
 
 compile_plugins:
   stage: compile_plugins
