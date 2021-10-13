@@ -13,6 +13,8 @@ merge_nightly:
   only:
   - nightly
   needs: []
+  tags:
+  - backend
 
 
 compile_plugins:
