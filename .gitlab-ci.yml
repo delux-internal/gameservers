@@ -9,7 +9,7 @@ stages:
 
 merge_nightly:
   stage: merge_nightly
-  script: git branch -D nightly && git checkout unstable && git checkout -B nightly && git push origin nightly --force
+  script: git checkout origin/unstable && git checkout -B nightly && git push origin nightly --force
   only:
   - nightly
   needs: []
