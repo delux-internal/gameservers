@@ -6,13 +6,19 @@ stages:
   - fastdl
   - github
 
-
 merge_nightly:
   stage: merge_nightly
-  script: git branch -D nightly && git checkout unstable && git checkout -B nightly && git push origin nightly --force
+  script:
+  -  whoami;
+  -  git checkout origin/unstable;
+  -  git checkout -B nightly;
+  -  git remote set-url origin git@gitlab.com:creators_tf/gameservers/servers.git;
+  -  git push origin nightly --force;
   only:
-  - nightly
+  - nightly-ci
   needs: []
+  tags:
+  - backend
 
 compile_plugins:
   stage: compile_plugins
