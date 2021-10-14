@@ -9,7 +9,7 @@
 #include <sdktools>
 #include <sdkhooks>
 
-#define PROP_MODEL "models/bots/boss_bot/carrier.mdl"
+#define PROP_MODEL "models/props_combine/combine_citadel_animated.mdl"
 
 public Plugin myinfo =
 {
