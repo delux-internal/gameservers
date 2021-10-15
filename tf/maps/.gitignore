@@ -122,3 +122,10 @@ sd_doomsday_event.bsp
 tc_hydro.bsp
 tr_dustbowl.bsp
 tr_target.bsp
+# halloween 2021
+arena_lumberyard_event.bsp
+cp_ambush_event.bsp
+koth_los_muertos.bsp
+koth_synthetic_event.bsp
+pd_farmageddon.bsp
+pl_terror_event.bsp

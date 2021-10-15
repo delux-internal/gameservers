@@ -1,18 +1,24 @@
 stages:
+  - merge_nightly
   - compile_plugins
   - genyml
   - trigger
   - fastdl
   - github
 
-# Secret Detection
-#include:
-#  - template: Secret-Detection.gitlab-ci.yml
-
-#secret_detection:
-#  tags:
-#    - sast-runner
-
+merge_nightly:
+  stage: merge_nightly
+  script:
+  -  whoami;
+  -  git checkout origin/unstable;
+  -  git checkout -B nightly;
+  -  git remote set-url origin git@gitlab.com:creators_tf/gameservers/servers.git;
+  -  git push origin nightly --force;
+  only:
+  - nightly-ci
+  needs: []
+  tags:
+  - backend
 
 compile_plugins:
   stage: compile_plugins
