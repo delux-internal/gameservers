@@ -6,6 +6,7 @@ stages:
   - fastdl
   - github
 
+
 merge_nightly:
   stage: merge_nightly
   script:
@@ -19,6 +20,13 @@ merge_nightly:
   needs: []
   tags:
   - backend
+
+merge_nightly:
+  stage: merge_nightly
+  script: git branch -D nightly && git checkout unstable && git checkout -B nightly && git push origin nightly --force
+  only:
+  - nightly
+  needs: []
 
 compile_plugins:
   stage: compile_plugins
