@@ -15,7 +15,7 @@ source scripts/helpers.sh
 
 
 # update server if it needs it
-./steamcmd/steamcmd.sh +login anonymous +force_install_dir ${PWD} +app_update 232250 validate +exit
+./steamcmd/steamcmd.sh +login anonymous +force_install_dir ${PWD} +app_update 232250 +exit
 
 # generate our server config
 python3 ./gencfg.py
