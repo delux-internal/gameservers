@@ -28,7 +28,7 @@ public void GetPrettyMapName(const char[] map, char[] prettymap, int size)
         // if we find a substring
         if (GetRegexSubString(normalizeMapNameRegex, 0, match, sizeof(match)))
         {
-            LogMessage("match %s", match);
+            // LogMessage("match %s", match);
             // hack for refresh maps
             if (StrContains(match, "_f", false) != -1 && StrContains(match, "_final", false) == -1)
             {
@@ -68,5 +68,5 @@ public void GetPrettyMapName(const char[] map, char[] prettymap, int size)
     // remove underlines and replace with spaces
     ReplaceString(prettymap, size, "_", " ", true);
 
-    LogMessage("Prettymap %s.", prettymap);
+    // LogMessage("Prettymap %s.", prettymap);
 }
