@@ -1,0 +1,25 @@
+Item
+{
+	name 					"The Laser Scattergun"
+	type 					"weapon"
+	item_class 				"tf_weapon_scattergun"
+	item_index 				13
+	item_logname			"scattergun_laser"
+	preserve_attributes 	1
+    beta					"1"
+	"used_by_classes"
+	{
+		"scout" "1"
+	}
+
+	attributes
+	{
+		"charge shot with secondary" 1
+		"charge shot with secondary damage" 1.50
+		"damage penalty" 0.9
+		"fire rate penalty" 1.15
+        "dmg bonus vs buildings" 0.2
+        "crits_become_minicrits" 1
+		"ragdolls become ash" 1
+    }
+}
