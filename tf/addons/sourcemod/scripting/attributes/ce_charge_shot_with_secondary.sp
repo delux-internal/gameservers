@@ -113,6 +113,12 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 					damage *= flDamageMult;
 					EmitSoundToClient(attacker, CHARGE_USED_SOUND);
 					
+					// Are we dealing large amounts of damage in one shot? If yes, fire the event
+					if(damage >= 125.0)
+					{
+						CEcon_SendEventToClientUnique(attacker, "TF_SCATTERSHOCK_MEATSHOT", 1);
+					}
+					
 					// subtract the extra consumption from the clip, minus one because shots already take one ammo
 					SetEntProp(iActiveWeapon, Prop_Send, "m_iClip1", iClip - (iClipConsumption - 1)); 
 					StopCharging(attacker);
