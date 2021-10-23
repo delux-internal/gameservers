@@ -108,7 +108,7 @@ public Action player_hurt(Handle hEvent, const char[] szName, bool bDontBroadcas
 			CEconItems_GetClientWearedItemByIndex(attacker, i, xItem);
 			
 			// Custom damage types.
-			if (custom |= DMG_BURN)
+			if (custom & DMG_BURN)
 			{
 				// Is this item...
 				switch (xItem.m_iItemDefinitionIndex)
