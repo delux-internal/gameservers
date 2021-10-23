@@ -88,6 +88,49 @@ public Action player_death(Handle hEvent, const char[] szName, bool bDontBroadca
 	return Plugin_Continue;
 }
 
+public Action player_hurt(Handle hEvent, const char[] szName, bool bDontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+	int attacker = GetClientOfUserId(GetEventInt(hEvent, "attacker"));
+	int damage = GetEventInt(hEvent, "damageamount");
+	int custom = GetEventInt(hEvent, "custom");
+	bool crit = GetEventBool(hEvent, "crit");
+	bool mini = GetEventBool(hEvent, "minicrit");
+
+	if(IsClientValid(attacker) && attacker != client)
+	{
+		// Item related events..
+		int playerItemCount = CEconItems_GetClientWearedItemsCount(attacker);
+		for (int i = 0; i < playerItemCount; i++)
+		{
+			// Grab item.
+			CEItem xItem;
+			CEconItems_GetClientWearedItemByIndex(attacker, i, xItem);
+			
+			// Custom damage types.
+			if (custom |= DMG_BURN)
+			{
+				// Is this item...
+				switch (xItem.m_iItemDefinitionIndex)
+				{
+					case 186: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_FIRE_AQUANAUT", damage, hEvent);
+				}
+			}
+			
+			// Are we critting or mini-critting?
+			if (crit || mini)
+			{
+				switch (xItem.m_iItemDefinitionIndex)
+				{
+					case 186: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_CRITS_AQUANAUT", damage, hEvent);
+				}
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 public Action object_destroyed(Handle hEvent, const char[] szName, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
