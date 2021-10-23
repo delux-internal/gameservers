@@ -2,7 +2,6 @@
 #include <sdktools>
 #include <tf2>
 #include <tf2_stocks>
-=======
 #include <tf2attributes>
 #include <cecon>
 #include <cecon_items>
@@ -335,7 +334,7 @@ void UpdateCharge(int client)
 		{
 			EmitGameSoundToClient(client, CHARGE_READY_SOUND);
 			m_bHasPlayedReadySound[client] = true;
-			TF2Attrib_SetByName(iActiveWeapon, "weapon spread bonus", 1.2);
+			TF2Attrib_SetByName(iActiveWeapon, "weapon spread bonus", 0.8);
 			TF2Attrib_SetByName(iActiveWeapon, "sniper fires tracer", 1.0);
 		}
 		return;
