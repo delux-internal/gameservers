@@ -113,6 +113,12 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 					damage *= flDamageMult;
 					EmitSoundToClient(attacker, CHARGE_USED_SOUND);
 					
+					// Are we dealing large amounts of damage in one shot? If yes, fire the event
+					if(damage >= 125.0)
+					{
+						CEcon_SendEventToClientUnique(attacker, "TF_SCATTERSHOCK_MEATSHOT", 1);
+					}
+					
 					// subtract the extra consumption from the clip, minus one because shots already take one ammo
 					SetEntProp(iActiveWeapon, Prop_Send, "m_iClip1", iClip - (iClipConsumption - 1)); 
 					StopCharging(attacker);
@@ -278,7 +284,6 @@ void StartCharging(int client)
 	m_flChargeFinishTime[client] = GetEngineTime() + flChargeTime;
 	m_bIsCharging[client] = true;
 	m_bHasPlayedReadySound[client] = false;
-	TF2Attrib_SetByName(iActiveWeapon, "sniper fires tracer", 1.0);
 	
 	if(cvReloadResetsCharge.BoolValue)
 	{
@@ -335,7 +340,8 @@ void UpdateCharge(int client)
 		{
 			EmitGameSoundToClient(client, CHARGE_READY_SOUND);
 			m_bHasPlayedReadySound[client] = true;
-			TF2Attrib_SetByName(iActiveWeapon, "weapon spread bonus", 1.2);
+			TF2Attrib_SetByName(iActiveWeapon, "weapon spread bonus", 0.8);
+			TF2Attrib_SetByName(iActiveWeapon, "sniper fires tracer", 1.0);
 		}
 		return;
 	}

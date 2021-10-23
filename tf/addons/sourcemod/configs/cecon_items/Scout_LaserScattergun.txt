@@ -15,7 +15,7 @@ Item
 	attributes
 	{
 		"charge shot with secondary" 1
-		"charge shot with secondary damage" 1.50
+		"charge shot with secondary damage" 1.65
 		"damage penalty" 0.9
 		"fire rate penalty" 1.15
         "dmg bonus vs buildings" 0.2
