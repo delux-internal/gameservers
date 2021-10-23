@@ -108,12 +108,15 @@ public Action player_hurt(Handle hEvent, const char[] szName, bool bDontBroadcas
 			CEconItems_GetClientWearedItemByIndex(attacker, i, xItem);
 			
 			// Custom damage types.
-			if (custom & DMG_BURN)
+			switch (custom)
 			{
-				// Is this item...
-				switch (xItem.m_iItemDefinitionIndex)
+				case DMG_BURN:
 				{
-					case 186: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_FIRE_AQUANAUT", damage, hEvent);
+					// Is this item...
+					switch (xItem.m_iItemDefinitionIndex)
+					{
+						case 186: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_FIRE_AQUANAUT", damage, hEvent);
+					}
 				}
 			}
 			
