@@ -6,7 +6,7 @@
 #include <prettymap>
 #pragma semicolon 1
 
-#define MCE_VERSION "1.10.5"
+#define MCE_VERSION "1.10.5C"
 #define ctftag "{creators}>>{default} "
 
 public Plugin:myinfo =
