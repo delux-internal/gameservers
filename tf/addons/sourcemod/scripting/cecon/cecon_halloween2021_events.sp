@@ -60,6 +60,7 @@ public Action player_death(Handle hEvent, const char[] szName, bool bDontBroadca
 	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	int attacker = GetClientOfUserId(GetEventInt(hEvent, "attacker"));
 	int death_flags = GetEventInt(hEvent, "death_flags");
+	int customkill = GetEventInt(hEvent, "customkill");
 
 	if (!IsClientValid(client)) return Plugin_Continue;
 	if (!IsClientValid(attacker)) return Plugin_Continue;
@@ -105,6 +106,25 @@ public Action player_death(Handle hEvent, const char[] szName, bool bDontBroadca
 				// If the person we're killing is in the air, fire an event. "Kill an airborne enemy while wearing the Iron Sight"
 				if(!(GetEntityFlags(client) & FL_ONGROUND))
 					CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_IRON_AIRBORNE", 1, hEvent);
+			}
+			case 189: /*Minor Magus Sleeves*/ {
+				
+				// If this is a spell kill, send an event. "Kill a player with a spell while using the Minor Magus Sleeves"
+				switch (customkill)
+				{
+					case TF_CUSTOM_SPELL_BATS: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+					case TF_CUSTOM_SPELL_BLASTJUMP: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+					case TF_CUSTOM_SPELL_FIREBALL: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+					case TF_CUSTOM_SPELL_LIGHTNING: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+					case TF_CUSTOM_SPELL_METEOR: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+					case TF_CUSTOM_SPELL_MIRV: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+					case TF_CUSTOM_SPELL_MONOCULUS: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+					case TF_CUSTOM_SPELL_SKELETON: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+					case TF_CUSTOM_SPELL_TELEPORT: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+					case TF_CUSTOM_SPELL_TINY: CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MAGUS_SPELLKILL", 1, hEvent);
+						
+				}
+				
 			}
 			case 190: /*Molten Monitor*/ CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_MOLTENMONITOR_KILL", 1, hEvent);
 			case 191: /*Pocket nope.avi*/ {
@@ -157,6 +177,13 @@ public void OnPlayerDamagePost(int victim, int attacker, int inflictor, float da
 		CEItem xItem;
 		CEconItems_GetClientWearedItemByIndex(attacker, i, xItem);
 		
+		// If we're dealing damage in general...
+		switch (xItem.m_iItemDefinitionIndex)
+		{
+			// "Deal 5000 explosive damage across an entire match while wearing the Minor Magus Sleeves"
+			case 189: /*Minor Magus Sleeves*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_MAGUS_DAMAGE", RoundToNearest(damage));
+		}
+		
 		// Custom damage types.
 		if ((damagetype & DMG_CRIT) == DMG_CRIT)		// Crits or mini-crits.
 		{
@@ -166,7 +193,6 @@ public void OnPlayerDamagePost(int victim, int attacker, int inflictor, float da
 				case 186: /*Aquanaut*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_CRITS_AQUANAUT", RoundToNearest(damage));
 			}
 		} 
-
 		else if ((damagetype & DMG_BLAST) == DMG_BLAST) // Explosive damage.
 		{
 			// Is this item...
@@ -174,6 +200,15 @@ public void OnPlayerDamagePost(int victim, int attacker, int inflictor, float da
 			{
 				// "Deal 500 blast or fire damage in single life while wearing the BOMBINOCULUS!"
 				case 187: /*BOMBINOCULUS!*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_BOMB_FIREORBLAST_DAMAGE", RoundToNearest(damage));
+			}
+		}
+		else if (!(damagetype & DMG_BLAST))
+		{
+			// Is this item...
+			switch (xItem.m_iItemDefinitionIndex)
+			{
+				// "Deal 500 blast or fire damage in single life while wearing the BOMBINOCULUS!"
+				case 189: /*Minor Magus Sleeves*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_MAGUS_NOBLASTDAMAGE", RoundToNearest(damage));
 			}
 		}
 		
