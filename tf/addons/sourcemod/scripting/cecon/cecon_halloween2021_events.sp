@@ -46,6 +46,12 @@ public void OnPluginStart()
 
 	// Player Events
 	HookEvent("player_death", player_death);
+	
+	for (int i = 0; i < MAXPLAYERS+1; i++)
+	{
+		if (!IsClientValid(i)) continue;
+		SDKHook(i, SDKHook_OnTakeDamagePost, OnPlayerDamagePost);
+	}
 
 }
 
@@ -126,7 +132,7 @@ public Action player_death(Handle hEvent, const char[] szName, bool bDontBroadca
 	return Plugin_Continue;
 }
 
-public void OnClientConnected(int client)
+public void OnClientPostAdminCheck(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamagePost, OnPlayerDamagePost);
 }
