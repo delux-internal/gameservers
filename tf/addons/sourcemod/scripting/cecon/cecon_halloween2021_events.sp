@@ -165,18 +165,7 @@ public void OnPlayerDamagePost(int victim, int attacker, int inflictor, float da
 				case 186: /*Aquanaut*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_CRITS_AQUANAUT", RoundToNearest(damage));
 			}
 		} 
-		else if ((damagetype & DMG_BURN) == DMG_BURN)	// Burning.
-		{
-			// Is this item...
-			switch (xItem.m_iItemDefinitionIndex)
-			{
-				// "Deal 212 fire damage as Pyro while wearing the Aquanaut"
-				case 186: /*Aquanaut*/ 		CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_FIRE_AQUANAUT", RoundToNearest(damage));
-				
-				// "Deal 500 blast or fire damage in single life while wearing the BOMBINOCULUS!"
-				case 187: /*BOMBINOCULUS!*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_BOMB_FIREORBLAST_DAMAGE", RoundToNearest(damage));
-			}
-		}
+
 		else if ((damagetype & DMG_BLAST) == DMG_BLAST) // Explosive damage.
 		{
 			// Is this item...
@@ -194,6 +183,19 @@ public void OnPlayerDamagePost(int victim, int attacker, int inflictor, float da
 			{
 				// "Smash into your enemies with a shield while wearing the Iron Sight"
 				case 188: /*Iron Sight*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_IRON_SMASH", RoundToNearest(damage));
+			}
+		}
+		
+		else if (TF2_IsPlayerInCondition(victim, TFCond_OnFire))
+		{
+			// Is this item...
+			switch (xItem.m_iItemDefinitionIndex)
+			{
+				// "Deal 212 fire damage as Pyro while wearing the Aquanaut"
+				case 186: /*Aquanaut*/ 		CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_FIRE_AQUANAUT", RoundToNearest(damage));
+				
+				// "Deal 500 blast or fire damage in single life while wearing the BOMBINOCULUS!"
+				case 187: /*BOMBINOCULUS!*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_BOMB_FIREORBLAST_DAMAGE", RoundToNearest(damage));
 			}
 		}
 	}
