@@ -63,6 +63,7 @@ public Action player_death(Handle hEvent, const char[] szName, bool bDontBroadca
 
 	if (!IsClientValid(client)) return Plugin_Continue;
 	if (!IsClientValid(attacker)) return Plugin_Continue;
+	if (client == attacker) return Plugin_Continue;
 
 	// Item related events.
 	int attackerItemCount = CEconItems_GetClientWearedItemsCount(attacker);
