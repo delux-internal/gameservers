@@ -154,15 +154,10 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			}
 			if(buttons & IN_ATTACK)
 			{
+				// Lets not have people shoot multiple charge shots
 				UpdateCharge(client);
-				/*if(m_flChargeProgress[client] < 1.0)
-				{*/
-					// the player is shooting while charging, wasting the charge so reset it
-					// if the charge is full, the player is trying to use the earned shot so dont reset it
-					StopCharging(client);
-					// the player knows what he is doing, so let him restart the charge without letting go of secondary fire
-					m_bHasStoppedCharging[client] = true;
-				//}
+				StopCharging(client);
+				m_bHasStoppedCharging[client] = true;
 			}
 		}
 		else
