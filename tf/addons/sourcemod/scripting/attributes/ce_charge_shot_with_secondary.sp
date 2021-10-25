@@ -156,8 +156,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			{
 				// Lets not have people shoot multiple charge shots
 				UpdateCharge(client);
-				StopCharging(client);
-				m_bHasStoppedCharging[client] = true;
+				if(m_flChargeProgress[client] < 1.0) // if we reset it over 1 then we can never use c)
+				{
+					StopCharging(client);
+					m_bHasStoppedCharging[client] = true;
+				}
 			}
 		}
 		else
