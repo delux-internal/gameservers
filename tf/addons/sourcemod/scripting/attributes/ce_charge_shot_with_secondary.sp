@@ -65,7 +65,7 @@ public OnPluginStart()
 	CreateTimer(HUD_UPDATE_RATE, DrawChargeHUD, INVALID_HANDLE, TIMER_REPEAT);
 	
 	cvOnlyShowHUDWhileCharging = CreateConVar("ce_charge_shot_hide_hud_uncharged", "0.0");
-	cvRequireChargeRepress = CreateConVar("ce_charge_shot_require_repress", "1.0");
+	cvRequireChargeRepress = CreateConVar("ce_charge_shot_require_repress", "0.0");
 	cvReloadResetsCharge = CreateConVar("ce_charge_shot_reload_reset", "0.0");
 }
 
@@ -155,14 +155,14 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			if(buttons & IN_ATTACK)
 			{
 				UpdateCharge(client);
-				if(m_flChargeProgress[client] < 1.0)
-				{
+				/*if(m_flChargeProgress[client] < 1.0)
+				{*/
 					// the player is shooting while charging, wasting the charge so reset it
 					// if the charge is full, the player is trying to use the earned shot so dont reset it
 					StopCharging(client);
 					// the player knows what he is doing, so let him restart the charge without letting go of secondary fire
 					m_bHasStoppedCharging[client] = true;
-				}
+				//}
 			}
 		}
 		else
