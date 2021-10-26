@@ -83,5 +83,3 @@ If you have something to contribute, please, open a pull request! Make sure your
 
 ## Licensing
 This repository is dual licensed under the GPLv3 license, available at `LICENSES/GPLv3.txt`, and the MIT license, available at `LICENSES/MIT.txt`.
-
-

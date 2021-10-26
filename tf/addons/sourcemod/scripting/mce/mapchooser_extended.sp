@@ -21,7 +21,7 @@
 #undef REQUIRE_PLUGIN
 #include <nativevotes>
 
-#define MCE_VERSION "1.10.5"
+#define MCE_VERSION "1.10.5C"
 
 #define NV "nativevotes"
 #define ctftag "{creators}>>{default} "

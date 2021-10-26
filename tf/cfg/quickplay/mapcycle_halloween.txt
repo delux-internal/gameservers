@@ -34,6 +34,22 @@ pl_precipice_event_final
 pl_rumble_event
 plr_hightower_event
 sd_doomsday_event
+
+//// new community maps
+
+// ctf_hades
+workshop/2592293663
+
+// well event
+workshop/1534896855
+
+// helltrain
+workshop/2542455773
+
+// ghastlane
+workshop/1510960573
+
+
 //// removed bcuz bad:
 // koth_viaduct_event
 // koth_lakeside_event
