@@ -1,3 +1,5 @@
+#pragma semicolon 1
+
 /********** MAP CHANGE / STARTUP RELATED STUFF **********/
 
 public void OnMapStart()
@@ -23,6 +25,8 @@ Action eRoundStart(Handle event, char[] name, bool dontBroadcast)
     ActuallySetRandomSeed();
     // this counts
     timeSinceMapStart = GetEngineTime();
+
+    return Plugin_Continue;
 }
 
 public void OnMapEnd()
@@ -86,8 +90,9 @@ Action checkNativesEtc(Handle timer)
     if (GetFeatureStatus(FeatureType_Native, "SourceTV_GetDemoFileName") == FeatureStatus_Available)
     {
         SOURCETVMGR = true;
-        LogMessage("SrctvManager found");
     }
+
+    return Plugin_Continue;
 }
 
 // NUKE the client timers from orbit on plugin and map reload
@@ -170,7 +175,11 @@ void checkStatus()
             }
         }
     }
-    StacLog("Server IP + Port = %s", hostipandport);
+    if (DEBUG)
+    {
+        StacLog("Server IP + Port = %s", hostipandport);
+    }
+
 }
 
 void DoTPSMath()
@@ -183,5 +192,3 @@ void DoTPSMath()
         StacLog("tickinterv %f, tps %f", tickinterv, tps);
     }
 }
-
-
