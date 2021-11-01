@@ -44,10 +44,6 @@ if ${gitclean} && ( ${gitshallow} || ${gitgc_aggressive} || ${gitgc} ); then
     exit 1
 fi
 
-# don't ever do this
-sudo chmod 775                      /srv/daemon-data    -Rfv
-sudo chown pterodactyl:pterodactyl  /srv/daemon-data    -Rfv
-
 info "Finding empty objects"
 numemptyobjs=$(find .git/objects/ -type f -empty | wc -l)
 if (( numemptyobjs > 0 )); then
