@@ -37,6 +37,7 @@ while getopts ":csahv" flag; do
     esac
 done
 
+
 # pretty obvious
 if ${gitclean} && ( ${gitshallow} || ${gitgc_aggressive} || ${gitgc} ); then
     error "options not compatible"
