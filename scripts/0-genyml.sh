@@ -19,8 +19,6 @@ allservers=(
     chipub
     lapub
     eupub
-    auspub
-    sgppub
 )
 
 # staging servers tags
