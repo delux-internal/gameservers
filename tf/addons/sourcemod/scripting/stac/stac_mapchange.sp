@@ -18,7 +18,7 @@ public void OnMapStart()
     GetConVarString(FindConVar("hostname"), hostname, sizeof(hostname));
 }
 
-Action eRoundStart(Handle event, char[] name, bool dontBroadcast)
+public Action eRoundStart(Handle event, char[] name, bool dontBroadcast)
 {
     DoTPSMath();
     // might as well do this here!
@@ -42,7 +42,7 @@ Action checkNativesEtc(Handle timer)
     // check sv cheats
     if (GetConVarBool(FindConVar("sv_cheats")))
     {
-        //SetFailState("sv_cheats set to 1! Aborting!");
+        SetFailState("sv_cheats set to 1! Aborting!");
     }
     // check wait command
     if (GetConVarBool(FindConVar("sv_allow_wait_command")))

@@ -89,17 +89,10 @@ cregion = ""
 econ = False
 pubs = False
 
-
-
 if sid > 100 and sid <= 199:
 
     c_region = "EU 1"
     type = "Quickplay"
-
-    if sid > 102:
-        type = "Halloween"
-
-
 
 elif sid > 200 and sid <= 299:
 
@@ -107,35 +100,10 @@ elif sid > 200 and sid <= 299:
 
     type = "Quickplay"
 
-    if sid > 202:
-        type = "Halloween"
-
-
 elif sid > 300 and sid <= 399:
 
     c_region = "LA"
     type = "Quickplay"
-
-    if sid > 302:
-        type = "Halloween"
-
-
-elif sid > 600 and sid <= 699:
-
-    c_region = "AUS"
-    type = "Quickplay"
-
-    if sid > 601:
-        type = "Halloween"
-
-
-elif sid > 700 and sid <= 799:
-    c_region = "SGP"
-
-    type = "Quickplay"
-
-    if sid > 701:
-        type = "Halloween"
 
 else:
     c_region = "Unknown"
