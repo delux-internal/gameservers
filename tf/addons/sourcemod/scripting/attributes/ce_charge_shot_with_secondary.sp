@@ -85,6 +85,11 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 {
 	if(IsClientValid(attacker))
 	{
+		if(inflictor != attacker) // we cant be attacking with the scattergun so ignore this
+		{
+			return Plugin_Continue;
+		}
+		
 		if(HasAttributeActive(attacker) && m_bIsCharging[attacker])
 		{
 			UpdateCharge(attacker);
@@ -152,16 +157,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				m_bHasStoppedCharging[client] = false;
 				//PrintToChatAll("%N Started charging (%b))", client, m_bIsCharging[client]);
 			}
-			if(buttons & IN_ATTACK)
-			{
-				// Lets not have people shoot multiple charge shots
-				UpdateCharge(client);
-				if(m_flChargeProgress[client] < 1.0) // if we reset it over 1 then we can never use c)
-				{
-					StopCharging(client);
-					m_bHasStoppedCharging[client] = true;
-				}
-			}
 		}
 		else
 		{
@@ -180,6 +175,24 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 }
 
+public Action TF2_CalcIsAttackCritical(int client, int weapon, char[] weaponname, bool &result)
+{
+	if(HasAttributeActive(client))
+	{
+		RequestFrame(CheckHit, client);
+	}
+}
+
+void CheckHit(int client)
+{
+	if(m_bIsCharging[client])
+	{
+		StopCharging(client);
+		StartCharging(client);
+	}
+}
+
+
 public void OnReloadPost(int weapon, bool successful)
 {
 	if(successful)
@@ -195,6 +208,14 @@ public void OnReloadPost(int weapon, bool successful)
 				m_bHasStoppedCharging[iOwner] = true;
 			}
 		}
+	}
+}
+
+public Action OnSwitchWeapon(int client, int weapon)
+{
+	if(m_bIsCharging[client])
+	{
+		StopCharging(client);
 	}
 }
 
@@ -255,6 +276,7 @@ public void OnClientPutInServer(int client)
 	m_bHasStoppedCharging[client] = true;
 	m_flChargeFinishTime[client] = 0.0;
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(client, SDKHook_WeaponSwitch, OnSwitchWeapon);
 }
 
 public void OnClientDisconnect(int client)
