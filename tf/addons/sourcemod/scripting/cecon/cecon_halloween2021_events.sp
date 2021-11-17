@@ -96,7 +96,7 @@ public Action player_death(Handle hEvent, const char[] szName, bool bDontBroadca
 				
 				// If we're in the air while killing, fire an event. "Kill an enemy while airborne and wearing the BOMBINOCULUS!"
 				if(!(GetEntityFlags(attacker) & FL_ONGROUND))
-					CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_BOMB_KILL", 1, hEvent);
+					CEcon_SendEventToClientFromGameEvent(attacker, "CREATORS_HALLOWEEN_BOMB_AIRBORNE_KILL", 1, hEvent);
 			}
 			case 188: /*Iron Sight*/ {
 				// If the person we're killing is a Demoman, fire an event. "Kill another Demoman while wearing the Iron Sight"
@@ -177,13 +177,6 @@ public void OnPlayerDamagePost(int victim, int attacker, int inflictor, float da
 		CEItem xItem;
 		CEconItems_GetClientWearedItemByIndex(attacker, i, xItem);
 		
-		// If we're dealing damage in general...
-		switch (xItem.m_iItemDefinitionIndex)
-		{
-			// "Deal 5000 explosive damage across an entire match while wearing the Minor Magus Sleeves"
-			case 189: /*Minor Magus Sleeves*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_MAGUS_DAMAGE", RoundToNearest(damage));
-		}
-		
 		// Custom damage types.
 		if ((damagetype & DMG_CRIT) == DMG_CRIT)		// Crits or mini-crits.
 		{
@@ -192,22 +185,25 @@ public void OnPlayerDamagePost(int victim, int attacker, int inflictor, float da
 				// "Deal 500 mini-crit or critical damage as Pyro while wearing the Aquanaut"
 				case 186: /*Aquanaut*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_CRITS_AQUANAUT", RoundToNearest(damage));
 			}
-		} 
-		else if ((damagetype & DMG_BLAST) == DMG_BLAST) // Explosive damage.
+		}
+		
+		
+		if ((damagetype & DMG_BLAST) == DMG_BLAST) // Explosive damage.
 		{
 			// Is this item...
 			switch (xItem.m_iItemDefinitionIndex)
 			{
 				// "Deal 500 blast or fire damage in single life while wearing the BOMBINOCULUS!"
 				case 187: /*BOMBINOCULUS!*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_BOMB_FIREORBLAST_DAMAGE", RoundToNearest(damage));
+				case 189: /*Minor Magus Sleeves*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_MAGUS_BLASTDAMAGE", RoundToNearest(damage));
+				
 			}
 		}
-		else if (!(damagetype & DMG_BLAST))
+		else
 		{
 			// Is this item...
 			switch (xItem.m_iItemDefinitionIndex)
 			{
-				// "Deal 500 blast or fire damage in single life while wearing the BOMBINOCULUS!"
 				case 189: /*Minor Magus Sleeves*/ CEcon_SendEventToClientUnique(attacker, "CREATORS_HALLOWEEN_MAGUS_NOBLASTDAMAGE", RoundToNearest(damage));
 			}
 		}
