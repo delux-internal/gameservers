@@ -201,14 +201,13 @@ public Action OnPlayerRunCmd
         // make sure client isnt using a spin bind
         || buttons & IN_LEFT
         || buttons & IN_RIGHT
-        // make sure we're not lagging and that cmdnum
+        // make sure we're not lagging and that cmdnum is saneish
         || IsUserLagging(userid, true, false)
     )
     // if any of these things are true, don't check angles etc
     {
         return Plugin_Continue;
     }
-    spinbotCheck(userid);
     aimsnapCheck(userid);
     triggerbotCheck(userid);
     psilentCheck(userid);
@@ -243,20 +242,12 @@ void bhopCheck(int userid)
 
         if
         (
-            // last input didn't have a jump - include to prevent legits holding spacebar from triggering detections
-            !(
-                clbuttons[Cl][1] & IN_JUMP
-            )
-            &&
+            // last input didn't have a jump
+            !(clbuttons[Cl][1] & IN_JUMP)
             // player pressed jump
-            (
-                clbuttons[Cl][0] & IN_JUMP
-            )
-            // they were on the ground when they pressed space
-            &&
-            (
-                flags & FL_ONGROUND
-            )
+            && (clbuttons[Cl][0] & IN_JUMP)
+            // they were on the ground when they jumped
+            && (flags & FL_ONGROUND)
         )
         {
             // increment bhops
@@ -439,7 +430,7 @@ void cmdnumspikeCheck(int userid)
     {
         int spikeamt = clcmdnum[Cl][0] - clcmdnum[Cl][1];
         // https://github.com/sapphonie/StAC-tf2/issues/74
-        if (spikeamt >= 12 || spikeamt < 0)
+        if (spikeamt >= 32 || spikeamt < 0)
         {
             char heldWeapon[256];
             GetClientWeapon(Cl, heldWeapon, sizeof(heldWeapon));
@@ -470,81 +461,6 @@ void cmdnumspikeCheck(int userid)
                 char pubreason[256];
                 Format(pubreason, sizeof(pubreason), "%t", "cmdnumSpikesBanAllChat", Cl, cmdnumSpikeDetects[Cl]);
                 BanUser(userid, reason, pubreason);
-            }
-        }
-    }
-}
-
-/*
-    SPINBOT DETECTION - again heavily modified from SSAC
-*/
-void spinbotCheck(int userid)
-{
-    static float spinDiff[TFMAXPLAYERS+1][2];
-    int Cl = GetClientOfUserId(userid);
-    // ignore clients using turn binds!
-    if (maxSpinbotDetections != -1)
-    {
-        // get the abs value of the difference between the last two y angles
-        float angBuff = FloatAbs(NormalizeAngleDiff(clangles[Cl][0][1] - clangles[Cl][1][1]));
-        // set up our array
-        spinDiff[Cl][1] = spinDiff[Cl][0];
-        spinDiff[Cl][0] = angBuff;
-
-        // only count this as a detect if the spin amt ( spinDiff[Cl][0] )
-        // is greater than 10 degrees and ALSO matches the last value ( spinDiff[Cl][1] )
-        // AND it isn't a moronicly high amt of mouse movement / sensitivity
-        if
-        (
-            clmouse[Cl][0] < 5000
-            &&
-            clmouse[Cl][1] < 5000
-            &&
-            (
-                FloatAbs(spinDiff[Cl][0]) >= 10.0
-                &&
-                (spinDiff[Cl][0] == spinDiff[Cl][1])
-            )
-        )
-        {
-            spinbotDetects[Cl]++;
-
-            // this can trigger on normal players, only care about if it happens 10 times in a row at least!
-            if (spinbotDetects[Cl] >= 10)
-            {
-                PrintToImportant
-                (
-                    "{hotpink}[StAC]{white} Spinbot detection of {yellow}%.2f{white}° on %N.\nDetections so far: {palegreen}%i{white}.",
-                    spinDiff[Cl][0],
-                    Cl,
-                    spinbotDetects[Cl]
-                );
-                StacLogSteam(userid);
-                StacLogNetData(userid);
-                StacLogAngles(userid);
-                StacLogCmdnums(userid);
-                StacLogTickcounts(userid);
-                StacLogMouse(userid);
-                if (spinbotDetects[Cl] % 20 == 0)
-                {
-                    StacDetectionNotify(userid, "spinbot", spinbotDetects[Cl]);
-                }
-                if (spinbotDetects[Cl] >= maxSpinbotDetections && maxSpinbotDetections > 0)
-                {
-                    char reason[128];
-                    Format(reason, sizeof(reason), "%t", "spinbotBanMsg", spinbotDetects[Cl]);
-                    char pubreason[256];
-                    Format(pubreason, sizeof(pubreason), "%t", "spinbotBanAllChat", Cl, spinbotDetects[Cl]);
-                    BanUser(userid, reason, pubreason);
-                }
-            }
-        }
-        // reset if we don't get consecutive detects
-        else
-        {
-            if (spinbotDetects[Cl] > 0)
-            {
-                spinbotDetects[Cl]--;
             }
         }
     }
@@ -904,22 +820,14 @@ void triggerbotCheck(int userid)
         {
             attack = 2;
         }
+
         if
         (
-            // thinking about removing this...
-            (
-                   didBangOnFrame[Cl][0]
-                || didHurtOnFrame[Cl][0]
-                || didBangOnFrame[Cl][1]
-                || didHurtOnFrame[Cl][1]
-                || didBangOnFrame[Cl][2]
-                || didHurtOnFrame[Cl][2]
-            )
+            // did dmg on this tick
+            didHurtOnFrame[Cl][0]
             &&
-            // count all attack2 single inputs
-            (
-                attack > 0
-            )
+            // single tick input
+            attack > 0
         )
         {
             tbotDetects[Cl]++;
@@ -1028,26 +936,12 @@ bool HasValidAngles(int Cl)
 {
     if
     (
-        // ignore weird angle resets in mge / dm, ignore laggy players
-        (
-            IsZeroVector(clangles[Cl][0])
-        )
-        ||
-        (
-            IsZeroVector(clangles[Cl][1])
-        )
-        ||
-        (
-            IsZeroVector(clangles[Cl][2])
-        )
-        ||
-        (
-            IsZeroVector(clangles[Cl][3])
-        )
-        ||
-        (
-            IsZeroVector(clangles[Cl][4])
-        )
+        // ignore weird angle resets in mge / dm && ignore laggy players
+           IsZeroVector(clangles[Cl][0])
+        || IsZeroVector(clangles[Cl][1])
+        || IsZeroVector(clangles[Cl][2])
+        || IsZeroVector(clangles[Cl][3])
+        || IsZeroVector(clangles[Cl][4])
     )
     {
         return false;
